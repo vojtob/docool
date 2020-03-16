@@ -5,10 +5,9 @@ from pathlib import Path
 import numpy as np
 import cv2
 
-import docool
-import rect_recognition as rr
-import rect_areas as ra
-import image_utils
+import docool.images.rect_recognition as rr
+import docool.images.rect_areas as ra
+import docool.images.image_utils as image_utils
 
 def imgrectangles(imgdef, args):
     # read image
@@ -63,6 +62,8 @@ def icons2image(imgdef, args):
     cv2.imwrite(str(imgiconpath), img)
 
 def add_icons(args):
+    if args.verbose:
+        print('add icons')
     # read images icons definitions   
     with open(args.projectdir / 'src' / 'img' / 'images.json') as imagesFile:
         imagedefs = json.load(imagesFile)
@@ -99,6 +100,8 @@ def areas2image(imgdef, args):
     cv2.imwrite(str(imgpath), img)
 
 def add_areas(args):
+    if args.verbose:
+        print('add areas')
     # read images icons definitions   
     with open(args.projectdir / 'src' / 'img' / 'img_focus.json') as imagesFile:
         imagedefs = json.load(imagesFile)
@@ -108,28 +111,8 @@ def add_areas(args):
             continue
         areas2image(imgdef, args)
 
-def parse_args():
-    parser = argparse.ArgumentParser(description='Documentation tools - decorate images')
-    parser.add_argument('-v', '--verbose', help='to be more verbose', action='store_true')
-    parser.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
-    parser.add_argument('-pd', '--projectdir', help='set project explicitly')
-    # decorate
-    parser.add_argument('--icons', help='add icons to images based on src/docs/img/images.json', action='store_true')
-    parser.add_argument('--areas', help='create image with focused area based on src/docs/img/img_focus.json', action='store_true')
-    parser.add_argument('-f', '--file', help='process only this one file')
-
-    args = parser.parse_args()
-    args = docool.add_project(args)
-
-    return args
-
-if __name__ == '__main__':
-    args = parse_args()
-    if args.icons:
-        docool.log(args, 'icons')
+def doit(args):
+    if args.icons or args.all:
         add_icons(args)
-        docool.log(args, 'icons', 'done')
-    if args.areas:
-        docool.log(args, 'areas')
+    if args.areas or args.all:
         add_areas(args)
-        docool.log(args, 'areas', 'done')

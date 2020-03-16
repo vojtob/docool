@@ -1,6 +1,6 @@
 import cv2
 import numpy as np
-import image_utils
+import docool.images.image_utils as image_utils
 
 # if the distance between two points is smaller than this, continue in line
 REALLY_SMALL_GAP   = 3
