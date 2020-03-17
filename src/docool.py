@@ -1,7 +1,7 @@
 import argparse
 from pathlib import Path
 
-from docool import clean, dimg, decorate, dpublish
+from docool import clean, dimg, decorate, dpublish, dspec
 
 def log(args, message='start'):
     message_format = '{args.projectname}: {message} {args.command}'
@@ -34,9 +34,13 @@ if __name__ == '__main__':
     subparsers = parser.add_subparsers(help='command help')
 
     parser_clean = subparsers.add_parser('clean', help='clean all generated files and folders')
+    # parser_clean.add_argument('-v', '--verbose', help='to be more verbose', action='store_true')
+    # parser_clean.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
     parser_clean.set_defaults(command='clean')
 
     parser_img = subparsers.add_parser('img', help='export & convert images')
+    # parser_img.add_argument('-v', '--verbose', help='to be more verbose', action='store_true')
+    # parser_img.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
     parser_img.add_argument('-a', '--all', help='export images from archimate tool', action='store_true')
     parser_img.add_argument('--archi', help='export images from archimate tool', action='store_true')
     parser_img.add_argument('--svg', help='svg -> png', action='store_true')
@@ -45,6 +49,8 @@ if __name__ == '__main__':
     parser_img.set_defaults(command='dimg')
 
     parser_decorate = subparsers.add_parser('decorate', help='decorate images')
+    # parser_decorate.add_argument('-v', '--verbose', help='to be more verbose', action='store_true')
+    # parser_decorate.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
     parser_decorate.add_argument('-a', '--all', help='add icons and areas to images', action='store_true')
     parser_decorate.add_argument('--icons', help='add icons to images based on src/docs/img/images.json', action='store_true')
     parser_decorate.add_argument('--areas', help='create image with focused area based on src/docs/img/img_focus.json', action='store_true')
@@ -52,18 +58,20 @@ if __name__ == '__main__':
     parser_decorate.set_defaults(command='decorate')
 
     parser_spec = subparsers.add_parser('spec', help='create specification')
+    # parser_spec.add_argument('-v', '--verbose', help='to be more verbose', action='store_true')
+    # parser_spec.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
+    parser_spec.add_argument('-a', '--all', help='clean, build and generate specification', action='store_true')
     parser_spec.add_argument('-b', '--build', help='clean and build hugo site', action='store_true')
-    parser_spec.add_argument('-g', '--generate', help='generate documentation', action='store_true')
-    # parser_spec.add_argument('-u', '--update', help='update only', action='store_true')
-    # parser_spec.add_argument('--word', help='export to word', action='store_true')
-    # parser_spec.add_argument('--web', help='export for web', action='store_true')
+    parser_spec.add_argument('-u', '--update', help='update content only', action='store_true')
+    parser_spec.add_argument('-req', '--requirements', help='generate requirements', action='store_true')
     parser_spec.set_defaults(command='spec')
 
     parser_publish = subparsers.add_parser('publish', help='publish images, specification as word')
-    # parser_publish.add_argument('-i', '--images', help='publish images', action='store_true')
-    # parser_publish.add_argument('-u', '--update', help='update only', action='store_true')
-    # parser_publish.add_argument('-d', '--doc', help='export to word', action='store_true')
-    # parser_publish.add_argument('--web', help='export for web', action='store_true')
+    # parser_publish.add_argument('-v', '--verbose', help='to be more verbose', action='store_true')
+    # parser_publish.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
+    parser_publish.add_argument('-i', '--images', help='publish images', action='store_true')
+    parser_publish.add_argument('--doc', help='export to word document', action='store_true')
+    # parser_publish.add_argument('-w', '--web', help='export for web', action='store_true')
     parser_publish.set_defaults(command='publish')
 
     args = parser.parse_args()
@@ -86,12 +94,12 @@ if __name__ == '__main__':
 
     if args.command=='publish':
         log(args)
-        dpublish.publish_images(args)
+        dpublish.doit(args)
         log(args, 'done')
 
     if args.command=='spec':
         log(args)
-        dpublish.do_specification(args)
+        dspec.doit(args)
         log(args, 'done')
 
     print('\ndocool: DONE')

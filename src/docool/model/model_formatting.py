@@ -1,4 +1,4 @@
-import model_processing as mp
+import docool.model.model_processing as mp
 
 LINE_FORMAT = '| {0} | {1} |'
 

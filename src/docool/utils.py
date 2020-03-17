@@ -1,23 +1,20 @@
+import os
+import shutil
 from pathlib import Path
-import argparse
 
-def log(args, function, message='start'):
-    message_format = 'docool({args.projectname}): {message} {function}'
-    if hasattr(args, 'file') and args.file is not None:
-        message_format = message_format + ' for file {args.file}'
-    print(message_format.format(args=args, message=message.upper(), function=function))
+def mycopy(source_directory, destination_directory, debug=False):
+    if debug:
+        print('copy {0} -> {1}'.format(str(source_directory), str(destination_directory)))
+    # walk over files in from directory
+    for (dirpath, _, filenames) in os.walk(source_directory):
+        # create destination directory
+        d = Path(dirpath.replace(str(source_directory), str(destination_directory)))
+        d.mkdir(parents=True, exist_ok=True)
+        
+        # convert files with specific extension
+        for f in filenames:
+            sourcefile = Path(dirpath, f)
+            destfile = str(sourcefile).replace(str(source_directory), str(destination_directory))
+            shutil.copy(str(sourcefile), destfile)
 
-def add_project(args):
-    if args.projectdir is None:
-        args.projectdir = Path.cwd().parent
-    else:
-        args.projectdir = Path(args.project)
-    args.projectname = args.projectdir.stem
-    args.docoolpath = Path(__file__).parent.parent.parent
 
-    if args.verbose:
-        print('project dir: {0}'.format(args.projectdir))
-        print('project name: {0}'.format(args.projectname))
-        print('docool path: {0}'.format(args.docoolpath))
-
-    return args

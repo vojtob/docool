@@ -1,5 +1,3 @@
-import os
-
 import xml.etree.ElementTree as ET
 
 class ArchiFileProcessor:
@@ -7,8 +5,9 @@ class ArchiFileProcessor:
         'archimate': 'http://www.archimatetool.com/archimate'}
 
     def __init__(self, projectdir):
-        modelname = projectdir.split('\\')[-1]
-        modelpath = os.path.join(projectdir, 'src', 'model', modelname+'.archimate')
+        # modelname = projectdir.split('\\')[-1]
+        # modelname = str(projectdir.stem)+'.archimate'
+        modelpath = projectdir / 'src' / 'model' / (str(projectdir.stem)+'.archimate')
         self.tree = ET.parse(modelpath)
     
     def get_element(self, eid):
