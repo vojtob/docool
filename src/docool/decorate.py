@@ -39,7 +39,7 @@ def icons2image(imgdef, args):
     if args.verbose:
         print('add icons to image {0}'.format(imgdef['fileName']))
     
-    img, rectangles = imgrectangles(imgdef,args)
+    img, rectangles = imgrectangles(imgdef, args)
     # add icons to image
     iconspath = args.projectdir / 'src' / 'res' / 'icons'
     for icondef in imgdef['icons']:
@@ -77,7 +77,11 @@ def areas2image(imgdef, args):
     if args.verbose:
         print('add area {0} into image {1}'.format(imgdef['focus-name'], imgdef['fileName']))
     
-    img, rectangles = imgrectangles(imgdef,args)
+    _, rectangles = imgrectangles(imgdef, args)
+    imgpath = args.projectdir / 'temp' / 'img_icons' / imgdef['fileName']
+    if args.debug:
+        print('whole image path:', imgpath)
+    img = cv2.imread(str(imgpath), cv2.IMREAD_UNCHANGED)
     # identify bounding polygons for areas
     polygons = []
     for area in imgdef['areas']:
