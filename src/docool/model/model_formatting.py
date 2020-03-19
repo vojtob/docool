@@ -27,21 +27,6 @@ def requirement_as_table(req):
         docs.append(LINE_FORMAT.format(req.name, realizationdesc(realization)))
     return docs
 
-def requirement_as_text(req):
-    """ format single requirement as a list of lines in the table
-        every line is one realization
-        the first column is requirement name
-        the second column is a description how the requirement is realized based on related architecture elements
-    """
-    if len(req.realizations) == 0:
-        return ['<font color="red">XXXXXX TODO: Ziadna realizacia poziadavky</font>\n\n']
-
-    docs = []
-    for realization in req.realizations:
-        docs.append(realizationdesc(realization))
-        docs.append('\n\n')
-    return docs
-
 def requirements_as_table(reqs):
     """ format list of requirements into one table, join lines for every requirement """
     docs = [LINE_FORMAT.format('Požiadavka', 'Realizácia požiadavky'), LINE_FORMAT.format(' --- ', ' --- ')]

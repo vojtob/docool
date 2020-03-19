@@ -29,7 +29,7 @@ class ArchiFileProcessor:
             cond = ".//element[@xsi:type='archimate:RealizationRelationship'][@target='{0}']".format(req.eid)
             for realizationRelationship in relationshipsfolder.findall(cond, self.ns):
                 e = self.get_element(realizationRelationship.attrib['source'])
-                req.add_requirement(realizationRelationship, e)
+                req.add_realization(realizationRelationship, e)
         return requirements
 
     def get_folders(self, foldername):
@@ -62,7 +62,10 @@ class Element:
 
     @staticmethod
     def elementname(element):
-        return element.attrib['name']
+        if 'name' in element.attrib:
+            return element.attrib['name']
+        else:
+            return None
         
     @staticmethod
     def elementtype(element):
@@ -73,7 +76,7 @@ class Element:
     def elementdesc(element):
         eDoc = element.find('documentation')
         if (eDoc == None):
-            return '--'
+            return None
         else:
             return eDoc.text.replace('\n', '').replace('<ul>\r', '<ul>').replace('</li>\r', '</li>').replace('\r', '<BR/>').replace(' ', '• ')
 
@@ -87,11 +90,36 @@ class Requirement(Element):
         super().__init__(element)
         self.realizations = []
 
-    def add_requirement(self, realization_relationship, realization_element):
-        e = Element(realization_element)
-        if e.type == 'archimate:Product':
-            self.realizations.insert(0, (e, Element.elementdesc(realization_relationship)))
+    def add_realization(self, realization_relationship, realization_element):
+        realization = Realization(realization_element, realization_relationship)
+        if Element.elementtype(realization_element) == 'archimate:Product':
+            self.realizations.insert(0, realization)
         else:
-            self.realizations.append((e, Element.elementdesc(realization_relationship)))
+            self.realizations.append(realization)
+
+class Realization(Element):
+    """special class for realization of requirements. It has two parts:
+        1. realization element - it is core element that realize requirement
+        2. realization relation description - it is used when there description of core element is not suitable for this requirement
+    """
+
+    def __init__(self, element, relation):
+        # create as element
+        super().__init__(element)
+        self.realization_relationship = Element(relation)
+    
+    def get_desc(self):
+        """get realization description. Try to use description from realization relationship
+
+        if it is not available, use realizing element description
+        if it is not available, return warning string 
+        """
+
+        if self.realization_relationship.desc is not None:
+            return self.realization_relationship.desc
+        if self.desc is not None:
+            return self.desc
+        return '<font color="orange">XXXXXX TODO: {0} BEZ POPISU</font>'.format(self.name)
+
 
 

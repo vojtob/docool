@@ -2,11 +2,18 @@ import os
 import shutil
 from pathlib import Path
 
-def mycopy(source_directory, destination_directory, debug=False):
+def mycopy(source_directory, destination_directory, debug=False, ingore_dot_folders=True):
     if debug:
         print('copy {0} -> {1}'.format(str(source_directory), str(destination_directory)))
     # walk over files in from directory
-    for (dirpath, _, filenames) in os.walk(source_directory):
+    for (dirpath, dirnames, filenames) in os.walk(source_directory):
+        # if debug:
+        #     print('copy dirpath:', dirpath, Path(dirpath).name)
+        if Path(dirpath).name.startswith('.'):
+            # if debug:
+            #     print('ignore')
+            dirnames.clear()
+            continue
         # create destination directory
         d = Path(dirpath.replace(str(source_directory), str(destination_directory)))
         d.mkdir(parents=True, exist_ok=True)

@@ -3,7 +3,7 @@ import os
 from pathlib import PureWindowsPath, Path
 import subprocess
 from docool.utils import mycopy
-import docool.model.process_requirements as proc_req
+import docool.model.process_requirements_pages as proc_req
 
 def build_specification(args):
     if args.verbose:
@@ -54,7 +54,7 @@ def update_content(args):
 def generate_specification(args):
     if args.verbose:
         print('generate specification')
-    proc_req.page4chapter_separatedreqs(args)
+    proc_req.generatereqs(args)
 
 def doit(args):
     if args.build or args.all:
