@@ -44,7 +44,7 @@ def copy_and_add_elements_description(sourcepath, destpath, relativepath, args):
     with open(sourcepath, 'r', encoding='utf8') as fin:
         with open(destpath, 'w', encoding='utf8') as fout:
             for line in fin:
-                epattern = re.compile(r'@(INSERT|TINSERT) ([a-zA-Z]+) (((\b\w+\b)?\s*/?\s*)+)\1@')
+                epattern = re.compile(r'@(INSERT|TINSERT) ([a-zA-Z]+) (((\b\w+\b)?\s*[/&-,]?\s*)+)\1@')
                 # iterator = epattern.finditer(line)
                 # for m in iterator:
                 #     print('MATCH: |{0}|'.format(m.group()))
@@ -60,8 +60,15 @@ def copy_and_add_elements_description(sourcepath, destpath, relativepath, args):
                     if e:
                         t = e.desc.replace("\r", " ")
                         if command=='TINSERT':
-                            # insert into table
-                            t = t.replace('\n','<BR/><BR/>')
+                            tls = t.split('\n')
+                            t = ''
+                            for tl in tls:
+                                if tl.startswith('*') and (tl.find('*', 1)==-1):
+                                    t = t + '<li>' + tl[1:-1] + '</li>'
+                                else:
+                                    t = t + tl[:-1] + '<BR/>'
+                                # t = t + '<BR/>'
+
                         # add anchor
                         # relativepath = relativepath[:-3]
                         # if relativepath.endswith('_index'):
