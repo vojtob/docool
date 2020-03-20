@@ -62,7 +62,7 @@ if __name__ == '__main__':
     # parser_spec.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
     parser_spec.add_argument('-a', '--all', help='clean, build and generate specification', action='store_true')
     parser_spec.add_argument('-b', '--build', help='clean and build hugo site', action='store_true')
-    parser_spec.add_argument('-u', '--update', help='update content only', action='store_true')
+    parser_spec.add_argument('-c', '--content', help='copy and enrich content', action='store_true')
     parser_spec.add_argument('-req', '--requirements', help='generate requirements', action='store_true')
     parser_spec.set_defaults(command='spec')
 

@@ -13,6 +13,12 @@ class ArchiFileProcessor:
     def get_element(self, eid):
         return self.tree.getroot().find(".//element[@id='{0}']".format(eid), self.ns)
 
+    def find_element(self, etype, ename):
+        e = self.tree.getroot().find(".//element[@xsi:type='archimate:{0}'][@name='{1}']".format(etype,ename), self.ns)
+        if e:
+            return Element(e)
+        return None
+
     def get_folder(self, foldername):
         return self.tree.getroot().find(".//folder[@name='{0}']".format(foldername), self.ns)
 
@@ -78,7 +84,29 @@ class Element:
         if (eDoc == None):
             return None
         else:
-            return eDoc.text.replace('\n', '').replace('<ul>\r', '<ul>').replace('</li>\r', '</li>').replace('\r', '<BR/>').replace(' ', '• ')
+            return eDoc.text
+            # return eDoc.text.replace('\n', '').replace('<ul>\r', '<ul>').replace('</li>\r', '</li>').replace('\r', '<BR/>').replace(' ', '• ')
+
+    @staticmethod
+    def type2sk(type):
+        conversion = {
+            'BusinessActor':'Biznis Aktér',
+            'BusinessRole':'Biznis Rola',
+            'BusinessService':'Biznis služba',
+            'BusinessInterface':'Biznis rozhranie, komunikačný kanál',
+            'BusinessFunction':'Biznis funkcia',
+            'BusinessProcess':'Biznis proces',
+            'ApplicationComponent':'Aplikačný komponent, modul',
+            'ApplicationFunction':'Aplikačná funkcia',
+            'ApplicationService':'Aplikačná služba',
+            'ApplicationInterface':'Aplikačné rozhranie',
+            'ApplicationProcess':'Aplikačný proces',
+            'SystemSoftware':'Softvér',
+            'Artifact':'Technologický Artefakt',
+            'Capability':'Schopnosť, prístup'
+        }
+        
+        return conversion[type.split(':')[1]]
 
 
 class Requirement(Element):

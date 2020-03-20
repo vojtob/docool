@@ -2,7 +2,14 @@ import os
 import shutil
 from pathlib import Path
 
-def mycopy(source_directory, destination_directory, debug=False, ingore_dot_folders=True):
+def mycopy(source_directory, destination_directory, debug=False, ingore_dot_folders=True, onfile=None):
+    """ copy files from source to destination
+
+    optional parameter onfile is special handling function. If it is not specified (default), then file is
+    copied from source to destination directory. If specified, it called for each file with argumentes sourcefilepath,
+    destfilepath, debug and must handle copying file or generating or replacing or ...
+    """
+
     if debug:
         print('copy {0} -> {1}'.format(str(source_directory), str(destination_directory)))
     # walk over files in from directory
@@ -22,6 +29,9 @@ def mycopy(source_directory, destination_directory, debug=False, ingore_dot_fold
         for f in filenames:
             sourcefile = Path(dirpath, f)
             destfile = str(sourcefile).replace(str(source_directory), str(destination_directory))
-            shutil.copy(str(sourcefile), destfile)
+            if onfile is not None:
+                onfile(sourcefile, Path(destfile), debug)
+            else:
+                shutil.copy(str(sourcefile), destfile)
 
 

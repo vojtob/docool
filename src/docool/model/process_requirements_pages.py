@@ -51,10 +51,14 @@ def generatereqs(args):
                     if len(r.realizations) == 0:
                         fout.write('<font color="red">XXXXXX TODO: Ziadna realizacia poziadavky</font>\n\n')
                     else:
-                        realization_format_string = '**{realization_name}:** {realization_description}\n\n'
+                        realization_format_string = '**{realization_name}** ({element_type}): {realization_description}\n\n'
                         product_format_string = '{realization_description}\n\n'
                         for realization in r.realizations:
                             if(mp.ArchiFileProcessor.isproduct(realization.type)):
                                 fout.write(product_format_string.format(realization_description=realization.get_desc()))
                             else:
-                                fout.write(realization_format_string.format(realization_name=realization.name, realization_description=realization.get_desc()))
+                                fout.write(
+                                    realization_format_string.format(
+                                        realization_name=realization.name, 
+                                        realization_description=realization.get_desc(),
+                                        element_type=mp.Element.type2sk(realization.type)))
