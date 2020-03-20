@@ -2,7 +2,7 @@ import os
 import shutil
 from pathlib import Path
 
-def mycopy(source_directory, destination_directory, debug=False, ingore_dot_folders=True, onfile=None):
+def mycopy(source_directory, destination_directory, args, ingore_dot_folders=True, onfile=None):
     """ copy files from source to destination
 
     optional parameter onfile is special handling function. If it is not specified (default), then file is
@@ -10,7 +10,7 @@ def mycopy(source_directory, destination_directory, debug=False, ingore_dot_fold
     destfilepath, debug and must handle copying file or generating or replacing or ...
     """
 
-    if debug:
+    if args.debug:
         print('copy {0} -> {1}'.format(str(source_directory), str(destination_directory)))
     # walk over files in from directory
     for (dirpath, dirnames, filenames) in os.walk(source_directory):
@@ -29,9 +29,8 @@ def mycopy(source_directory, destination_directory, debug=False, ingore_dot_fold
         for f in filenames:
             sourcefile = Path(dirpath, f)
             destfile = str(sourcefile).replace(str(source_directory), str(destination_directory))
+            relativepath = str(sourcefile).replace(str(source_directory), '')
             if onfile is not None:
-                onfile(sourcefile, Path(destfile), debug)
+                onfile(sourcefile, Path(destfile), relativepath, args)
             else:
                 shutil.copy(str(sourcefile), destfile)
-
-

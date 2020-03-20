@@ -6,6 +6,7 @@ import re
 
 import docool.model.model_processing as mp
 from docool.utils import mycopy
+import docool.model.anchors as anchors
 import docool.model.process_requirements_pages as proc_req
 
 processor = None
@@ -31,32 +32,42 @@ def build_specification(args):
     theme = 'hugo-theme-docdock'
     themedir = hugodir/'themes'/theme
     themedir.mkdir(parents=True, exist_ok=True)
-    mycopy(args.docoolpath/'res'/'themes'/theme, themedir, args.debug)
+    mycopy(args.docoolpath/'res'/'themes'/theme, themedir, args)
     theme = 'onePageHtml'
     themedir = hugodir/'themes'/theme
     themedir.mkdir(parents=True, exist_ok=True)
-    mycopy(args.docoolpath/'res'/'themes'/theme, themedir, args.debug)
+    mycopy(args.docoolpath/'res'/'themes'/theme, themedir, args)
     shutil.copy(args.projectdir/'src'/'res'/'hugo-config'/'configNoTheme.toml', hugodir/'config.toml')
 
-def copy_and_add_elements_description(sourcepath, destpath, debug):
+def copy_and_add_elements_description(sourcepath, destpath, relativepath, args):
     global processor
     with open(sourcepath, 'r', encoding='utf8') as fin:
         with open(destpath, 'w', encoding='utf8') as fout:
             for line in fin:
-                epattern = re.compile(r'@INSERT ([a-zA-Z]+) ((\w+\s+)+)INSERT@')
+                epattern = re.compile(r'@(INSERT|TINSERT) ([a-zA-Z]+) (((\b\w+\b)?\s*/?\s*)+)\1@')
                 # iterator = epattern.finditer(line)
                 # for m in iterator:
                 #     print('MATCH: |{0}|'.format(m.group()))
                 m = epattern.search(line)
                 if m:
                     fout.write(line[:m.start()])
-                    etype = m.group(1)
-                    ename = m.group(2)[:-1]
-                    if debug:
-                        print('MATCH: type:{0}, name:"{1}"'.format(etype, ename))
+                    command = m.group(1)
+                    etype = m.group(2)
+                    ename = m.group(3)[:-1]
+                    if args.debug:
+                        print('MATCH: type:{0}, name:"{1}", command:{2}'.format(etype, ename, command))
                     e = processor.find_element(etype,ename)
                     if e:
-                        fout.write(e.desc.replace("\r", " "))
+                        t = e.desc.replace("\r", " ")
+                        if command=='TINSERT':
+                            # insert into table
+                            t = t.replace('\n','<BR/><BR/>')
+                        # add anchor
+                        # relativepath = relativepath[:-3]
+                        # if relativepath.endswith('_index'):
+                        #     relativepath = relativepath[:-len('_index')]
+                        t = anchors.saveanchor(args, e, relativepath) + t
+                        fout.write(t)
                     else:
                         print('!!! Element {0}:{1} not found'.format(etype,ename))
                     fout.write(line[m.end():])
@@ -66,21 +77,22 @@ def copy_and_add_elements_description(sourcepath, destpath, debug):
 def copy_content(args):
     global processor
     processor = mp.ArchiFileProcessor(args.projectdir)
+    anchors.deleteanchors(args)
     hugodir = args.projectdir / 'temp' / 'spec_local'
     # copy content
     if args.verbose:
         print('copy content into spec')
-    mycopy(args.projectdir/'src'/'specifikacia', hugodir/'content', args.debug, onfile=copy_and_add_elements_description)
+    mycopy(args.projectdir/'src'/'specifikacia', hugodir/'content', args, onfile=copy_and_add_elements_description)
     # copy images
     if args.verbose:
         print('copy images')
     imgspath = hugodir/'static'/'img'
     # copy exported images
-    mycopy(args.projectdir / 'temp' / 'img_exported', imgspath, args.debug)
+    mycopy(args.projectdir / 'temp' / 'img_exported', imgspath, args)
     # overwrite them with images with icons
-    mycopy(args.projectdir / 'temp' / 'img_icons', imgspath, args.debug)
+    mycopy(args.projectdir / 'temp' / 'img_icons', imgspath, args)
     # copy areas images
-    mycopy(args.projectdir / 'temp' / 'img_areas', imgspath, args.debug)
+    mycopy(args.projectdir / 'temp' / 'img_areas', imgspath, args)
 
 def generate_specification(args):
     if args.verbose:

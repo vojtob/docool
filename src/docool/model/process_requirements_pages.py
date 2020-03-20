@@ -4,6 +4,8 @@ from pathlib import Path
 import docool.model.model_processing as mp
 import docool.model.model_formatting as mf
 
+from docool.model import anchors
+
 def write_frontmatter(fout, title, weight):
     fout.write('---\ntitle: "{0}"\nweight: {1}\n---\n\n\n'.format(title, weight))
 
@@ -51,7 +53,7 @@ def generatereqs(args):
                     if len(r.realizations) == 0:
                         fout.write('<font color="red">XXXXXX TODO: Ziadna realizacia poziadavky</font>\n\n')
                     else:
-                        realization_format_string = '**{realization_name}** ({element_type}): {realization_description}\n\n'
+                        realization_format_string = '**[{realization_name}]({link})** ({element_type}): {realization_description}\n\n'
                         product_format_string = '{realization_description}\n\n'
                         for realization in r.realizations:
                             if(mp.ArchiFileProcessor.isproduct(realization.type)):
@@ -61,4 +63,6 @@ def generatereqs(args):
                                     realization_format_string.format(
                                         realization_name=realization.name, 
                                         realization_description=realization.get_desc(),
-                                        element_type=mp.Element.type2sk(realization.type)))
+                                        element_type=mp.Element.type2sk(realization.type),
+                                        link= anchors.getanchor(args, realization)))
+                                        # link= anchorname(realization.type[len('archimate:'):],realization.name)))
