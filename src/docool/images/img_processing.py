@@ -1,6 +1,6 @@
-import argparse
-import json
 from pathlib import Path
+import os
+import subprocess
 
 import numpy as np
 import cv2
@@ -61,18 +61,6 @@ def icons2image(imgdef, args):
     imgiconpath.parent.mkdir(parents=True, exist_ok=True)
     cv2.imwrite(str(imgiconpath), img)
 
-def add_icons(args):
-    if args.verbose:
-        print('add icons')
-    # read images icons definitions   
-    with open(args.projectdir / 'src' / 'img' / 'images.json') as imagesFile:
-        imagedefs = json.load(imagesFile)
-    for imgdef in imagedefs:
-        if args.file is not None and (imgdef['fileName'] != args.file):
-            # we want to process a specific file, but not this
-            continue
-        icons2image(imgdef, args)
-
 def areas2image(imgdef, args):
     if args.verbose:
         print('add area {0} into image {1}'.format(imgdef['focus-name'], imgdef['fileName']))
@@ -103,20 +91,23 @@ def areas2image(imgdef, args):
     imgpath.parent.mkdir(parents=True, exist_ok=True)
     cv2.imwrite(str(imgpath), img)
 
-def add_areas(args):
-    if args.verbose:
-        print('add areas')
-    # read images icons definitions   
-    with open(args.projectdir / 'src' / 'img' / 'img_focus.json') as imagesFile:
-        imagedefs = json.load(imagesFile)
-    for imgdef in imagedefs:
-        if args.file is not None and (imgdef['fileName'] != args.file):
-            # we want to process a specific file, but not this
-            continue
-        areas2image(imgdef, args)
+def process_images(source_directory, destination_directory, orig_extension, new_extension, command, verbose, debug):
+    if verbose:
+        print('convert {0}({1}) -> {2}({3})'.format(str(source_directory), orig_extension, str(destination_directory), new_extension))
 
-def doit(args):
-    if args.icons or args.all:
-        add_icons(args)
-    if args.areas or args.all:
-        add_areas(args)
+    # walk over files in from directory
+    for (dirpath, _, filenames) in os.walk(source_directory):
+        # create destination directory
+        d = Path(dirpath.replace(str(source_directory), str(destination_directory)))       
+        d.mkdir(parents=True, exist_ok=True)
+
+        # convert files with specific extension
+        for f in [f for f in filenames if f.endswith(orig_extension)]:          
+            ffrom = os.path.join(dirpath, f)
+            # change directory and extension
+            fto = ffrom.replace(str(source_directory), str(destination_directory)).replace(orig_extension, new_extension)
+            cmd = command.format(srcfile=ffrom, destfile=fto)
+            if debug:
+                print(cmd)
+            subprocess.run(cmd, shell=False)
+

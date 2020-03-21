@@ -1,1 +1,0 @@
-@call C:\Projects_src\Work\docool\src\docool\decorate.py %1 %2 %3 %4 %5
