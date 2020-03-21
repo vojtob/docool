@@ -25,4 +25,4 @@ Send("{F2}" & $projectName & "{ENTER}");
 Sleep(2000);
 Send("%windir%\System32\cmd.exe ""/K"" C:\prg\anaconda3\Scripts\activate.bat C:\prg\anaconda3{ENTER}")
 Sleep(2000);
-Send("docool{ENTER}");
+Send("docool -h{ENTER}");

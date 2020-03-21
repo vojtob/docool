@@ -1,4 +1,4 @@
 @set PROJECT_DIR=%~dp0
 @set PROJECT_DIR=%PROJECT_DIR:~0,-7%
 call "C:\prg\cmder\Cmder.exe"
-call "C:\Program Files (x86)\AutoIt3\AutoIt3_x64.exe" "C:\prg\docool\scripts\autoit\xstartCmder.au3" %PROJECT_DIR%
+call "C:\Program Files (x86)\AutoIt3\AutoIt3_x64.exe" "C:\Projects_src\Work\docool\src\autoit\xstartCmder.au3" %PROJECT_DIR%
