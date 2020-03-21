@@ -9,45 +9,42 @@ def publish_images(args):
         print('publish images')
     # publish images to release dir
     imgspath = args.projectdir / 'release' / 'img'
-    imgspath.parent.mkdir(parents=True, exist_ok=True)
+    imgspath.mkdir(parents=True, exist_ok=True)
     # copy png images from src  
     # copy exported images
-    mycopy(args.projectdir / 'temp' / 'img_exported', imgspath, args.debug)
+    mycopy(args.projectdir / 'temp' / 'img_exported', imgspath, args)
     # overwrite them with images with icons
-    mycopy(args.projectdir / 'temp' / 'img_icons', imgspath, args.debug)
+    mycopy(args.projectdir / 'temp' / 'img_icons', imgspath, args)
     # copy areas images
-    mycopy(args.projectdir / 'temp' / 'img_areas', imgspath, args.debug)
+    mycopy(args.projectdir / 'temp' / 'img_areas', imgspath, args)
 
 def publish_word_document(args):
     if args.verbose:
         print('publish word document')
     
-    wordpath = args.projectdir/'temp'/'doc_word'
-    shutil.rmtree(wordpath, ignore_errors=True)
-    wordpath.mkdir(parents=True, exist_ok=True)
-    releasepath = args.projectdir / 'release'
-    releasepath.mkdir(parents=True, exist_ok=True)
-    hugopath = args.projectdir / 'temp' / 'spec_local'
-   
-    # create hugo site with one sinlge page
+    # create hugo site with one single page
     if args.debug:
-        print('create hugo site with one sinlge page')
-    cmd = 'hugo -D -s "{specpath}" -t onePageHtml -d "{wordpath}" -b "{wordpath}"'.format(specpath=hugopath, wordpath=wordpath)
+        print('create hugo site with one single page')
+    hugopath = args.projectdir / 'temp' / 'spec_local'
+    onepagepath = args.projectdir/'temp'/'hugo_onepage'
+    shutil.rmtree(onepagepath, ignore_errors=True)
+    onepagepath.mkdir(parents=True, exist_ok=True)
+    cmd = 'hugo -D -s "{specpath}" -t onePageHtml -d "{onepagepath}" -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath)
     if args.debug:
         print(cmd)
     subprocess.run(cmd, shell=False)
-
+  
     # generate word
     if args.debug:
         print('generate word document')
-    # modelname = str(projectdir.stem)+'.archimate'
+    onepagehtml = onepagepath / 'index.html'
+    wordpath = args.projectdir / 'release' / (args.projectname+'.docx')
+    wordpath.parent.mkdir(parents=True, exist_ok=True)
     cmd = 'pandoc {mainfile} -f html -t docx -o {outputname} --verbose'.format(
-        mainfile=wordpath/'index.html', outputname=releasepath/(args.projectname+'.docx'))
+        mainfile=str(onepagehtml), outputname=str(wordpath))
     if args.debug:
         print(cmd)
     subprocess.run(cmd, shell=False)
-
-
 
 def doit(args):
     if args.images:

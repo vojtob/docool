@@ -51,15 +51,6 @@ if __name__ == '__main__':
     parser_img.add_argument('-f', '--file', help='process only this one file')
     parser_img.set_defaults(command='dimg')
 
-    # parser_decorate = subparsers.add_parser('decorate', help='decorate images')
-    # parser_decorate.add_argument('-v', '--verbose', help='to be more verbose', action='store_true')
-    # parser_decorate.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
-    # parser_decorate.add_argument('-a', '--all', help='add icons and areas to images', action='store_true')
-    # parser_decorate.add_argument('--icons', help='add icons to images based on src/docs/img/images.json', action='store_true')
-    # parser_decorate.add_argument('--areas', help='create image with focused area based on src/docs/img/img_focus.json', action='store_true')
-    # parser_decorate.add_argument('-f', '--file', help='process only this one file')
-    # parser_decorate.set_defaults(command='decorate')
-
     parser_spec = subparsers.add_parser('spec', help='create specification')
     # parser_spec.add_argument('-v', '--verbose', help='to be more verbose', action='store_true')
     # parser_spec.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
@@ -73,7 +64,7 @@ if __name__ == '__main__':
     # parser_publish.add_argument('-v', '--verbose', help='to be more verbose', action='store_true')
     # parser_publish.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
     parser_publish.add_argument('-i', '--images', help='publish images', action='store_true')
-    parser_publish.add_argument('--doc', help='export to word document', action='store_true')
+    parser_publish.add_argument('-d', '--doc', help='export to word document', action='store_true')
     # parser_publish.add_argument('-w', '--web', help='export for web', action='store_true')
     parser_publish.set_defaults(command='publish')
 
@@ -90,19 +81,14 @@ if __name__ == '__main__':
         dimg.doit(args)
         log(args, 'done')
 
-    # if args.command=='decorate':
-    #     log(args)
-    #     decorate.doit(args)
-    #     log(args, 'done')
+    if args.command=='spec':
+        log(args)
+        dspec.doit(args)
+        log(args, 'done')
 
     if args.command=='publish':
         log(args)
         dpublish.doit(args)
-        log(args, 'done')
-
-    if args.command=='spec':
-        log(args)
-        dspec.doit(args)
         log(args, 'done')
 
     print('\ndocool: DONE')
