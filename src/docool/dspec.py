@@ -18,30 +18,20 @@ def build_site(args):
     if args.verbose:
         print('build specification')
 
-    hugodir = args.projectdir / HUGO_PATH
-    
+    hugodir = args.projectdir / HUGO_PATH   
     # clean
     if args.verbose:
         print('clean ', str(hugodir))
     shutil.rmtree(hugodir, ignore_errors=True)
-   
     # create hugo site
     cmd = 'hugo new site {0}'.format(str(hugodir))
+    if args.debug:
+        print(cmd)
     subprocess.run(cmd, shell=False)
-
     # setup themes
     if args.verbose:
         print('setup theme')
-    # theme = 'hugo-theme-docdock'
-    # themedir = hugodir/'themes'/theme
-    # themedir.mkdir(parents=True, exist_ok=True)
-    # mycopy(args.docoolpath/'res'/'themes'/theme, themedir, args)
-    # theme = 'onePageHtml'
-    # themedir = hugodir/'themes'/theme
-    # themedir.mkdir(parents=True, exist_ok=True)
-    # mycopy(args.docoolpath/'res'/'themes'/theme, themedir, args)
     shutil.copy(args.projectdir/'src'/'res'/'hugo-config'/'configNoTheme.toml', hugodir/'config.toml')
-
 
 def enhance_spec(args):
     """ copy architecture description, insert element's description into text and generate anchors file
@@ -199,4 +189,3 @@ def doit(args):
         proc_req.generatereqs(args)
     if args.build or args.all:
         copy_content(args)
-    

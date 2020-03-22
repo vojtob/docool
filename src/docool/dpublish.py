@@ -26,7 +26,7 @@ def publish_word_document(args):
     if args.debug:
         print('create hugo site with one single page')
     hugopath = args.projectdir / 'temp' / 'spec_local'
-    onepagepath = args.projectdir/'temp'/'hugo_onepage'
+    onepagepath = args.projectdir/'temp'/'spec_onepage'
     shutil.rmtree(onepagepath, ignore_errors=True)
     onepagepath.mkdir(parents=True, exist_ok=True)
     ''' hugo parameters 
@@ -36,7 +36,8 @@ def publish_word_document(args):
         -t, --theme strings
         -b, --baseURL string         hostname (and path) to the root
     '''
-    cmd = 'hugo -D -s "{specpath}" -t onePageHtml -d "{onepagepath}" -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath)
+    cmd = 'hugo -D -s "{specpath}" -d "{onepagepath}" --themesDir C:\\Projects_src\\Work\\docool\\res\\themes\\ -t onePageHtml -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath)
+    # cmd = ' -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath)
     if args.debug:
         print(cmd)
     subprocess.run(cmd, shell=False)
