@@ -3,7 +3,9 @@ import pathlib
 import subprocess
 import json
 from pathlib import PureWindowsPath, Path
+
 from docool.images import img_processing
+from docool.utils import mycopy
 
 def export_archi(args):
     if args.verbose:
@@ -50,6 +52,21 @@ def add_areas(args):
             continue
         img_processing.areas2image(imgdef, args)
 
+def publish_images(args):
+    if args.verbose:
+        print('publish images')
+    # publish images to release dir
+    imgspath = args.projectdir / 'release' / 'img'
+    imgspath.mkdir(parents=True, exist_ok=True)
+    # copy png images from src  
+    # copy exported images
+    mycopy(args.projectdir / 'temp' / 'img_exported', imgspath, args)
+    # overwrite them with images with icons
+    mycopy(args.projectdir / 'temp' / 'img_icons', imgspath, args)
+    # copy areas images
+    mycopy(args.projectdir / 'temp' / 'img_areas', imgspath, args)
+
+
 def doit(args):
     if args.archi or args.all:
         export_archi(args)
@@ -59,3 +76,5 @@ def doit(args):
         add_icons(args)
     if args.areas or args.all:
         add_areas(args)
+    if args.publish or args.all:
+        publish_images(args)

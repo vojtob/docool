@@ -1,7 +1,8 @@
 import argparse
 from pathlib import Path
+import shutil
 
-from docool import clean, dimg, dpublish, dspec
+from docool import dimg, dspec
 
 def log(args, message='start'):
     message_format = '{args.projectname}: {message} {args.command}'
@@ -49,46 +50,48 @@ if __name__ == '__main__':
     parser_img.add_argument('--icons', help='add icons to images based on src/docs/img/images.json', action='store_true')
     parser_img.add_argument('--areas', help='create image with focused area based on src/docs/img/img_focus.json', action='store_true')
     parser_img.add_argument('-f', '--file', help='process only this one file')
-    parser_img.set_defaults(command='dimg')
+    parser_img.add_argument('-p', '--publish', help='publish image files', action='store_true')
+    parser_img.set_defaults(command='img')
 
-    parser_spec = subparsers.add_parser('spec', help='create specification')
+    parser_spec = subparsers.add_parser('doc', help='create documentation')
     # parser_spec.add_argument('-v', '--verbose', help='to be more verbose', action='store_true')
     # parser_spec.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
     parser_spec.add_argument('-a', '--all', help='clean, build and generate specification', action='store_true')
     parser_spec.add_argument('-s', '--site', help='clean and build empty hugo site', action='store_true')
     parser_spec.add_argument('-g', '--generate', help='generate specification and requirements', action='store_true')
     parser_spec.add_argument('-b', '--build', help='build site, copy content', action='store_true')
-    parser_spec.set_defaults(command='spec')
+    parser_spec.add_argument('-d', '--doc', help='export to word document', action='store_true')
+    parser_spec.set_defaults(command='doc')
 
-    parser_publish = subparsers.add_parser('publish', help='publish images, specification as word')
+    # parser_publish = subparsers.add_parser('publish', help='publish images, specification as word')
     # parser_publish.add_argument('-v', '--verbose', help='to be more verbose', action='store_true')
     # parser_publish.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
-    parser_publish.add_argument('-i', '--images', help='publish images', action='store_true')
-    parser_publish.add_argument('-d', '--doc', help='export to word document', action='store_true')
+    # parser_publish.add_argument('-i', '--images', help='publish images', action='store_true')
+    # parser_publish.add_argument('-d', '--doc', help='export to word document', action='store_true')
     # parser_publish.add_argument('-w', '--web', help='export for web', action='store_true')
-    parser_publish.set_defaults(command='publish')
+    # parser_publish.set_defaults(command='publish')
 
     args = parser.parse_args()
     args = __add_project(args)
 
     if args.command=='clean':
         log(args)
-        clean.doit(args)
+        for dirname in ['release', 'temp']:
+            p = args.projectdir / dirname
+            if p.exists():
+                shutil.rmtree(p)
+                if args.verbose:
+                    print('delete', p)
         log(args, 'done')
 
-    if args.command=='dimg':
+    if args.command=='img':
         log(args)
         dimg.doit(args)
         log(args, 'done')
 
-    if args.command=='spec':
+    if args.command=='doc':
         log(args)
         dspec.doit(args)
-        log(args, 'done')
-
-    if args.command=='publish':
-        log(args)
-        dpublish.doit(args)
         log(args, 'done')
 
     print('\ndocool: DONE')

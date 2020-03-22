@@ -8,7 +8,6 @@ import unidecode
 import docool.model.model_processing as mp
 from docool.utils import mycopy
 import docool.model.anchors as anchors
-import docool.model.process_requirements_pages as proc_req
 
 processor = None
 HUGO_PATH = Path('temp', 'spec_local')
@@ -61,7 +60,6 @@ def enhance_spec(args):
             relativepath = str(sourcefile).replace(str(source_directory), '')
             copy_and_add_elements_description(sourcefile, Path(destfile), relativepath, args)
 
-
 def copy_and_add_elements_description(sourcepath, destpath, relativepath, args):
     global processor
     with open(sourcepath, 'r', encoding='utf8') as fin:
@@ -99,7 +97,7 @@ def write_frontmatter(fout, title, weight):
     fout.write('---\ntitle: "{0}"\nweight: {1}\n---\n\n\n'.format(title, weight))
 
 def write_header(fout, title, level):
-    fout.write('\n{0} {1}\n'.format(level*'#', title))
+    fout.write('\n{0} {1}\n\n'.format(level*'#', title))
 
 def get_mdname(name):
     return unidecode.unidecode('{0}.md'.format(name.replace('.','-').replace(' ','-')))
@@ -143,16 +141,31 @@ def generatereqs(args):
                     if len(r.realizations) == 0:
                         fout.write('<font color="red">XXXXXX TODO: Ziadna realizacia poziadavky</font>\n\n')
                     else:
-                        realization_format_string = '**[{realization_name}]({link})** ({element_type}): {realization_description}\n\n'
+                        realization_format_string = '* **[{realization_name}]({link})** ({element_type}): {realization_description}\n'
+                        capabilty_realization_format_string = '\n**[{realization_name}]({link})** ({element_type}): {realization_description}\n\n'
+                        simple_realization_format_string = '* **[{realization_name}]({link})** ({element_type})\n'
                         product_format_string = '{realization_description}\n\n'
                         for realization in r.realizations:
                             if(mp.ArchiFileProcessor.isproduct(realization.type)):
                                 fout.write(product_format_string.format(realization_description=realization.get_desc()))
-                            else:
+                            elif realization.realization_relationship.desc is not None:
                                 fout.write(
                                     realization_format_string.format(
                                         realization_name=realization.name, 
-                                        realization_description=realization.get_desc(),
+                                        realization_description=realization.realization_relationship.desc,
+                                        element_type=mp.Element.type2sk(realization.type),
+                                        link= anchors.getanchor(args, realization)))                          
+                            elif realization.type == 'archimate:Capability':
+                                fout.write(
+                                    capabilty_realization_format_string.format(
+                                        realization_name=realization.name, 
+                                        realization_description=realization.desc,
+                                        element_type=mp.Element.type2sk(realization.type),
+                                        link= anchors.getanchor(args, realization)))                          
+                            else:
+                                fout.write(
+                                    simple_realization_format_string.format(
+                                        realization_name=realization.name, 
                                         element_type=mp.Element.type2sk(realization.type),
                                         link= anchors.getanchor(args, realization)))                          
 
@@ -177,6 +190,42 @@ def copy_content(args):
     # copy areas images
     mycopy(args.projectdir / 'temp' / 'img_areas', hugodir/'static'/'img', args)
 
+def publish_word_document(args):
+    if args.verbose:
+        print('publish word document')
+    
+    # create hugo site with one single page
+    if args.debug:
+        print('create hugo site with one single page')
+    hugopath = args.projectdir / 'temp' / 'spec_local'
+    onepagepath = args.projectdir/'temp'/'spec_onepage'
+    shutil.rmtree(onepagepath, ignore_errors=True)
+    onepagepath.mkdir(parents=True, exist_ok=True)
+    ''' hugo parameters 
+        -D, --buildDrafts
+        -s, --source string
+        -d, --destination string
+        -t, --theme strings
+        -b, --baseURL string         hostname (and path) to the root
+    '''
+    cmd = 'hugo -D -s "{specpath}" -d "{onepagepath}" --themesDir C:\\Projects_src\\Work\\docool\\res\\themes\\ -t onePageHtml -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath)
+    # cmd = ' -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath)
+    if args.debug:
+        print(cmd)
+    subprocess.run(cmd, shell=False)
+  
+    # generate word
+    if args.debug:
+        print('generate word document')
+    onepagehtml = onepagepath / 'index.html'
+    wordpath = args.projectdir / 'release' / (args.projectname+'.docx')
+    wordpath.parent.mkdir(parents=True, exist_ok=True)
+    cmd = 'pandoc {mainfile} -f html -t docx -o {outputname} --verbose'.format(
+        mainfile=str(onepagehtml), outputname=str(wordpath))
+    if args.debug:
+        print(cmd)
+    subprocess.run(cmd, shell=False)
+
 def doit(args):
     if args.site or args.all:
         build_site(args)
@@ -186,6 +235,8 @@ def doit(args):
         # copy architecture description, insert element's description into text and generate anchors file
         enhance_spec(args)
         # generate requirements, use anchors file to create links
-        proc_req.generatereqs(args)
+        generatereqs(args)
     if args.build or args.all:
         copy_content(args)
+    if args.doc or args.all:
+        publish_word_document(args)
