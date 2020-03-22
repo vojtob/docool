@@ -29,6 +29,13 @@ def publish_word_document(args):
     onepagepath = args.projectdir/'temp'/'hugo_onepage'
     shutil.rmtree(onepagepath, ignore_errors=True)
     onepagepath.mkdir(parents=True, exist_ok=True)
+    ''' hugo parameters 
+        -D, --buildDrafts
+        -s, --source string
+        -d, --destination string
+        -t, --theme strings
+        -b, --baseURL string         hostname (and path) to the root
+    '''
     cmd = 'hugo -D -s "{specpath}" -t onePageHtml -d "{onepagepath}" -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath)
     if args.debug:
         print(cmd)

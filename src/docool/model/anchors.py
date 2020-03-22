@@ -37,5 +37,7 @@ def getanchor(args, element):
         for line in fin:
             a = line.split(' -> ') 
             if a[0] == aname:
-                return a[1][:-1]+'#'+a[0]
+                # return a[1][:-1]+'#'+a[0]
+                return '{{{{< ref "{0}#{1}" >}}}}'.format(a[1][:-1], a[0])
+
     return ''

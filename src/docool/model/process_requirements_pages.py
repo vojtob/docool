@@ -18,6 +18,7 @@ def get_mdname(name):
 def generatereqs(args):
     processor = mp.ArchiFileProcessor(args.projectdir)
     foldername = 'Requirements'
+    generated_spec_path = args.projectdir / 'temp' / 'spec_generated'
     weight = 1
     for sectionfolder in sorted(processor.get_folders(foldername)):
         weight = weight+1
@@ -25,7 +26,7 @@ def generatereqs(args):
         if args.debug:
             print('create section', sectionfolder)
         sectionname = get_mdname(sectionfolder)
-        sectionpath =  args.projectdir / 'temp' / 'spec_local' / 'content' / '10-Requirements' / sectionname
+        sectionpath =  generated_spec_path / '10-Requirements' / sectionname
         sectionpath.mkdir(parents=True, exist_ok=True)
         indexpath =  sectionpath / '_index.md'
         with open(indexpath, 'w', encoding='utf8') as fout:
@@ -65,4 +66,3 @@ def generatereqs(args):
                                         realization_description=realization.get_desc(),
                                         element_type=mp.Element.type2sk(realization.type),
                                         link= anchors.getanchor(args, realization)))
-                                        # link= anchorname(realization.type[len('archimate:'):],realization.name)))
