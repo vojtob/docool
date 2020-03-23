@@ -142,7 +142,7 @@ def generatereqs(args):
                         fout.write('<font color="red">XXXXXX TODO: Ziadna realizacia poziadavky</font>\n\n')
                     else:
                         realization_format_string = '* **[{realization_name}]({link})** ({element_type}): {realization_description}\n'
-                        capabilty_realization_format_string = '\n**[{realization_name}]({link})** ({element_type}): {realization_description}\n\n'
+                        capabilty_realization_format_string = '\n**{realization_name}** ({element_type}): {realization_description}\n\n'
                         simple_realization_format_string = '* **[{realization_name}]({link})** ({element_type})\n'
                         product_format_string = '{realization_description}\n\n'
                         for realization in r.realizations:
