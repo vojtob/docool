@@ -22,21 +22,28 @@ class ArchiFileProcessor:
     def get_folder(self, foldername):
         return self.tree.getroot().find(".//folder[@name='{0}']".format(foldername), self.ns)
 
-    def get_requirements(self, foldername):
-        # get folder by name
-        reqfolder = self.get_folder(foldername)
+    def __create_requirements(self, requirements):
         # get all requirements by type converted to Requirement class
-        requirements = []
+        req_elements = []
         relationshipsfolder = self.get_folder('Relations')
-        for r in reqfolder.findall("element[@xsi:type='archimate:Requirement']", self.ns):
-            req = Requirement(r)
-            requirements.append(req)
+        for r in requirements:
+            req_element = Requirement(r)
+            req_elements.append(req_element)
             # find realizations
-            cond = ".//element[@xsi:type='archimate:RealizationRelationship'][@target='{0}']".format(req.eid)
+            cond = ".//element[@xsi:type='archimate:RealizationRelationship'][@target='{0}']".format(req_element.eid)
             for realizationRelationship in relationshipsfolder.findall(cond, self.ns):
                 e = self.get_element(realizationRelationship.attrib['source'])
-                req.add_realization(realizationRelationship, e)
-        return requirements
+                req_element.add_realization(realizationRelationship, e)
+        return req_elements
+
+    def get_all_requirements(self):
+        requirements = self.tree.getroot().findall(".//element[@xsi:type='archimate:Requirement']", self.ns)
+        return self.__create_requirements(requirements)
+
+    def get_requirements(self, foldername):
+        # get folder by name
+        requirements = self.get_folder(foldername).findall("element[@xsi:type='archimate:Requirement']", self.ns)
+        return self.__create_requirements(requirements)
 
     def get_folders(self, foldername):
         # get folder by name

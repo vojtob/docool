@@ -219,12 +219,23 @@ def publish_word_document(args):
         print('generate word document')
     onepagehtml = onepagepath / 'index.html'
     wordpath = args.projectdir / 'release' / (args.projectname+'.docx')
+    templatepath = args.docoolpath / 'res' / 'custom-reference.docx'
     wordpath.parent.mkdir(parents=True, exist_ok=True)
-    cmd = 'pandoc {mainfile} -f html -t docx -o {outputname} --verbose'.format(
-        mainfile=str(onepagehtml), outputname=str(wordpath))
+    cmd = 'pandoc {mainfile} -f html -t docx -o {outputname} --reference-doc={templatename} --verbose'.format(
+        mainfile=str(onepagehtml), outputname=str(wordpath), templatename=str(templatepath))
     if args.debug:
         print(cmd)
     subprocess.run(cmd, shell=False)
+
+def list_unsolved_requirements(args):
+    processor = mp.ArchiFileProcessor(args.projectdir)
+    c = 0
+    reqs = processor.get_all_requirements()
+    for r in sorted(reqs, key=lambda req: req.name):
+        if len(r.realizations) < 1:
+            print(r.name)
+            c = c+1
+    print('{0} requirements unsolved'.format(c))
 
 def doit(args):
     if args.site or args.all:
@@ -240,3 +251,5 @@ def doit(args):
         copy_content(args)
     if args.doc or args.all:
         publish_word_document(args)
+    if args.list:
+        list_unsolved_requirements(args)

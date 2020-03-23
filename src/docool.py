@@ -61,6 +61,7 @@ if __name__ == '__main__':
     parser_spec.add_argument('-g', '--generate', help='generate specification and requirements', action='store_true')
     parser_spec.add_argument('-b', '--build', help='build site, copy content', action='store_true')
     parser_spec.add_argument('-d', '--doc', help='export to word document', action='store_true')
+    parser_spec.add_argument('-l', '--list', help='list unsolved requirements', action='store_true')
     parser_spec.set_defaults(command='doc')
 
     # parser_publish = subparsers.add_parser('publish', help='publish images, specification as word')
