@@ -45,7 +45,8 @@ if __name__ == '__main__':
     parser_img.add_argument('-a', '--all', help='export, convert, ...', action='store_true')
     parser_img.add_argument('--archi', help='export images from archimate tool', action='store_true')
     parser_img.add_argument('--svg', help='svg -> png', action='store_true')
-    # parser_img.add_argument('--umlet', help='umlet -> png', action='store_true')
+    parser_img.add_argument('-u', '--umlet', help='umlet -> png', action='store_true')
+    parser_img.add_argument('-m', '--mermaid', help='mermaid images -> png', action='store_true')
     # parser_img.add_argument('--mm', help='mermaid -> png', action='store_true')
     parser_img.add_argument('--icons', help='add icons to images based on src/docs/img/images.json', action='store_true')
     parser_img.add_argument('--areas', help='create image with focused area based on src/docs/img/img_focus.json', action='store_true')
@@ -74,6 +75,8 @@ if __name__ == '__main__':
 
     args = parser.parse_args()
     args = __add_project(args)
+    if args.debug:
+        args.verbose = True
 
     if args.command=='clean':
         log(args)

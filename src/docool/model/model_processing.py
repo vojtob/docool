@@ -48,6 +48,8 @@ class ArchiFileProcessor:
     def get_folders(self, foldername):
         # get folder by name
         parentfolder = self.get_folder(foldername)
+        if not parentfolder:
+            return []
         # get all requirements by type converted to Requirement class
         return [Element.elementname(f) for f in parentfolder.findall("folder", self.ns)]
 

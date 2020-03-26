@@ -38,7 +38,10 @@ def imgrectangles(imgdef, args):
 def icons2image(imgdef, args):
     if args.verbose:
         print('add icons to image {0}'.format(imgdef['fileName']))
-    
+    if not (args.projectdir / 'temp' / 'img_exported' / imgdef['fileName']).exists():
+        print('    !!! file {0} does not exists !!!'.format(imgdef['fileName']))
+        return
+
     img, rectangles = imgrectangles(imgdef, args)
     # add icons to image
     iconspath = args.projectdir / 'src' / 'res' / 'icons'
@@ -90,24 +93,3 @@ def areas2image(imgdef, args):
     imgpath = args.projectdir / 'temp' / 'img_areas' / imgdef['fileName'].replace('.png', '_{0}.png'.format(imgdef['focus-name']))
     imgpath.parent.mkdir(parents=True, exist_ok=True)
     cv2.imwrite(str(imgpath), img)
-
-def process_images(source_directory, destination_directory, orig_extension, new_extension, command, verbose, debug):
-    if verbose:
-        print('convert {0}({1}) -> {2}({3})'.format(str(source_directory), orig_extension, str(destination_directory), new_extension))
-
-    # walk over files in from directory
-    for (dirpath, _, filenames) in os.walk(source_directory):
-        # create destination directory
-        d = Path(dirpath.replace(str(source_directory), str(destination_directory)))       
-        d.mkdir(parents=True, exist_ok=True)
-
-        # convert files with specific extension
-        for f in [f for f in filenames if f.endswith(orig_extension)]:          
-            ffrom = os.path.join(dirpath, f)
-            # change directory and extension
-            fto = ffrom.replace(str(source_directory), str(destination_directory)).replace(orig_extension, new_extension)
-            cmd = command.format(srcfile=ffrom, destfile=fto)
-            if debug:
-                print(cmd)
-            subprocess.run(cmd, shell=False)
-
