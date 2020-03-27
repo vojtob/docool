@@ -75,6 +75,9 @@ def areas2image(imgdef, args):
     img = cv2.imread(str(imgpath), cv2.IMREAD_UNCHANGED)
     # identify bounding polygons for areas
     polygons = []
+    if 'distance' in imgdef:
+        print('set distance')
+        ra.set_area_gap(int(imgdef['distance']))
     for area in imgdef['areas']:
         area_rectangles = [rectangles[r-1] for r in area]            
         polygons.append(ra.find_traverse_points(area_rectangles))
@@ -88,7 +91,17 @@ def areas2image(imgdef, args):
         img = cv2.polylines(img, [points], True, (0,0,255), 2)
         # use mask to set transparency
         mask = cv2.fillPoly(mask, [points], 255)
+    # print('orig shape', img.shape)
+    if img.shape[2] < 4:
+        # no transparency in image
+        x = np.zeros((img.shape[0], img.shape[1], 1), img.dtype)
+        # print('x shape', x.shape)
+        img = np.concatenate((img, x),2)
+        # img = np.hstack((img, x))
+        # print('add transparency shape', img.shape)
+        # print('mask shape', mask.shape)      
     img[:, :, 3] = mask
+    # print('final shape', img.shape)
 
     imgpath = args.projectdir / 'temp' / 'img_areas' / imgdef['fileName'].replace('.png', '_{0}.png'.format(imgdef['focus-name']))
     imgpath.parent.mkdir(parents=True, exist_ok=True)

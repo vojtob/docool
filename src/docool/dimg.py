@@ -4,6 +4,7 @@ import subprocess
 import json
 import time
 from pathlib import PureWindowsPath, Path
+import shutil
 
 from docool.images import img_processing
 from docool.utils import mycopy
@@ -62,6 +63,11 @@ def convert_mmd(args, fromfile, tofile, orig_extension, new_extension):
     if args.debug:
         print(cmd)
     subprocess.run(cmd, shell=False)
+        
+def copy_png(args, fromfile, tofile, orig_extension, new_extension):
+    if args.debug:
+        print('copy {0}->{1}'.format(fromfile, tofile))
+    shutil.copyfile(fromfile, tofile)
         
 def add_icons(args):
     if args.verbose:
@@ -151,6 +157,13 @@ def doit(args):
             args.projectdir / 'src' / 'img',
             args.projectdir / 'temp' / 'img_exported', 
             '.mmd', '.png', convert_mmd)
+
+    if args.png or args.all:
+        # copy png file
+        __img_walk(args, 
+            args.projectdir / 'src' / 'img',
+            args.projectdir / 'temp' / 'img_exported', 
+            '.png', '.png', copy_png)
 
     if args.icons or args.all:
         add_icons(args)

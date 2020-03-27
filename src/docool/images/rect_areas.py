@@ -187,3 +187,9 @@ def find_traverse_points(area_rectangles):
         traverse = go2nextpoint(area_rectangles, points[-1], traverse[1], traverse[2], traverse[3])
     
     return points
+
+def set_area_gap(x):
+    # global AREA_BORDER
+    # AREA_BORDER = x
+    global AREA_GAP
+    AREA_GAP = x

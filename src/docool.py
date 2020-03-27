@@ -39,7 +39,7 @@ if __name__ == '__main__':
     # parser_clean.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
     parser_clean.set_defaults(command='clean')
 
-    parser_img = subparsers.add_parser('img', help='export, convert and decorate images')
+    parser_img = subparsers.add_parser('img', help='export, convert, decorate and publish images')
     # parser_img.add_argument('-v', '--verbose', help='to be more verbose', action='store_true')
     # parser_img.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
     parser_img.add_argument('-a', '--all', help='export, convert, ...', action='store_true')
@@ -47,7 +47,7 @@ if __name__ == '__main__':
     parser_img.add_argument('--svg', help='svg -> png', action='store_true')
     parser_img.add_argument('-u', '--umlet', help='umlet -> png', action='store_true')
     parser_img.add_argument('-m', '--mermaid', help='mermaid images -> png', action='store_true')
-    # parser_img.add_argument('--mm', help='mermaid -> png', action='store_true')
+    parser_img.add_argument('--png', help='copy png images from source to generated', action='store_true')
     parser_img.add_argument('--icons', help='add icons to images based on src/docs/img/images.json', action='store_true')
     parser_img.add_argument('--areas', help='create image with focused area based on src/docs/img/img_focus.json', action='store_true')
     parser_img.add_argument('-f', '--file', help='process only this one file')
