@@ -21,6 +21,7 @@ def build_site(args):
     # clean
     if args.verbose:
         print('clean ', str(hugodir))
+    shutil.rmtree(args.projectdir / GENERATED_SPEC_PATH, ignore_errors=True)
     shutil.rmtree(hugodir, ignore_errors=True)
     # create hugo site
     cmd = 'hugo new site {0}'.format(str(hugodir))
@@ -240,14 +241,14 @@ def list_unsolved_requirements(args):
 def doit(args):
     if args.site or args.all:
         build_site(args)
-    if args.generate or args.all:
+    if args.generate or args.all or args.update:
         if args.verbose:
             print('generate specification')
         # copy architecture description, insert element's description into text and generate anchors file
         enhance_spec(args)
         # generate requirements, use anchors file to create links
         generatereqs(args)
-    if args.build or args.all:
+    if args.build or args.all or args.update:
         copy_content(args)
     if args.doc or args.all:
         publish_word_document(args)
