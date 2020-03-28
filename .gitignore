@@ -2,4 +2,5 @@
 src/docool/__pycache__
 src/docool/model/__pycache__
 src/docool/images/__pycache__
+src/docool/model/specific/__pycache__
 src/docool/temp.py
