@@ -1,1 +1,5 @@
-#{{ index (split (.Get 0) "#") 1 }}
+{{ if in (.Get 0) "#" }}
+    #{{ index (split (.Get 0) "#") 1 }}
+{{ else }}
+    {{- print "#" (replace (.Get 0) "/" "_") -}}
+{{ end }}

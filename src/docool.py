@@ -60,7 +60,7 @@ if __name__ == '__main__':
     parser_spec.add_argument('-a', '--all', help='clean, build and generate specification', action='store_true')
     parser_spec.add_argument('-u', '--update', help='update specification with new content', action='store_true')
     parser_spec.add_argument('-s', '--site', help='clean and build empty hugo site', action='store_true')
-    parser_spec.add_argument('-g', '--generate', help='generate specification and requirements', action='store_true')
+    # parser_spec.add_argument('-g', '--generate', help='generate specification and requirements', action='store_true')
     parser_spec.add_argument('-b', '--build', help='build site, copy content', action='store_true')
     parser_spec.add_argument('-d', '--doc', help='export to word document', action='store_true')
     parser_spec.add_argument('-l', '--list', help='list unsolved requirements', action='store_true')

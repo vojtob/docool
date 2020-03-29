@@ -1,9 +1,0 @@
-baseURL = "http://example.org/"
-languageCode = "sk"
-DefaultContentLanguage = "sk"
-title = "Centrum právnej pomoci"
-canonifyURLs = true
-
-[outputs]
-home = [ "HTML"]
-

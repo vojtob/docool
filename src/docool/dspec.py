@@ -31,7 +31,17 @@ def build_site(args):
     # setup themes
     if args.verbose:
         print('setup theme')
-    shutil.copy(args.projectdir/'src'/'res'/'hugo-config'/'configNoTheme.toml', hugodir/'config.toml')
+    with open(hugodir/'config.toml', 'w', encoding='utf8') as fout:
+        fout.write('languageCode = "sk"\n')
+        fout.write('DefaultContentLanguage = "sk"\n')
+        fout.write('title = "{0}"\n'.format(args.projectname))
+        fout.write('canonifyURLs = true\n')
+        fout.write('\n')
+        fout.write('[outputs]\n')
+        fout.write('home = [ "HTML"]\n')
+        # fout.write('\n')
+        # fout.write('\n')
+    # shutil.copy(args.projectdir/'src'/'res'/'hugo-config'/'configNoTheme.toml', hugodir/'config.toml')
 
 def enhance_spec(args):
     """ copy architecture description, insert element's description into text and generate anchors file
@@ -209,7 +219,8 @@ def publish_word_document(args):
         -t, --theme strings
         -b, --baseURL string         hostname (and path) to the root
     '''
-    cmd = 'hugo -D -s "{specpath}" -d "{onepagepath}" --themesDir C:\\Projects_src\\Work\\docool\\res\\themes\\ -t onePageHtml -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath)
+    # cmd = 'hugo -D -s "{specpath}" -d "{onepagepath}" --themesDir C:\\Projects_src\\Work\\docool\\res\\themes\\ -t onePageHtml -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath)
+    cmd = 'hugo -D -s "{specpath}" -d "{onepagepath}" --themesDir {themespath} -t onePageHtml -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath, themespath=str(args.docoolpath/'res'/'themes'))
     # cmd = ' -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath)
     if args.debug:
         print(cmd)
@@ -241,14 +252,13 @@ def list_unsolved_requirements(args):
 def doit(args):
     if args.site or args.all:
         build_site(args)
-    if args.generate or args.all or args.update:
+    if args.build or args.all or args.update:
         if args.verbose:
             print('generate specification')
         # copy architecture description, insert element's description into text and generate anchors file
         enhance_spec(args)
         # generate requirements, use anchors file to create links
         generatereqs(args)
-    if args.build or args.all or args.update:
         copy_content(args)
     if args.doc or args.all:
         publish_word_document(args)
