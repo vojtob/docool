@@ -2,13 +2,6 @@ import cv2
 import numpy as np
 import docool.images.image_utils as image_utils
 
-# if the distance between two points is smaller than this, continue in line
-REALLY_SMALL_GAP   = 3
-# shorter lines are not line
-MIN_SEGMENT_LENGTH = 30
-# rounded rectangles
-CORNER_GAP         = 12
-
 def addPointToSegments(lineSegments, keyCoordinate, lenCoordinate, reallySmallGap, minSegmentLength):
     """ add a point to segments """
 
@@ -51,16 +44,15 @@ def removeShortSegments(lineSegments, minSegmentLength):
     for keyCoordinate in emptyList:
         lineSegments.pop(keyCoordinate)
 
-def merge_similar_segments(line_segments, similar_length):
+def merge_similar_segments(line_segments, similar_length, really_small_gap):
     """if two there are two almoust similar segments, remove shorter"""
 
     emptyList = []
-
     for y in sorted(line_segments.keys()):
         if(len(line_segments[y]) < 1):
             emptyList.append(y)
 
-        for g in range(1, REALLY_SMALL_GAP+1):
+        for g in range(1, really_small_gap+1):
             if not line_segments.get(y+g):
                 continue
 
@@ -112,8 +104,8 @@ def findLineSegments(img, reallySmallGap, minSegmentLength):
     # check segments for length
     removeShortSegments(lineSegmentsHorizontal, minSegmentLength)
     removeShortSegments(lineSegmentsVertical, minSegmentLength)
-    merge_similar_segments(lineSegmentsHorizontal, reallySmallGap)
-    merge_similar_segments(lineSegmentsVertical, reallySmallGap)
+    merge_similar_segments(lineSegmentsHorizontal, reallySmallGap, reallySmallGap)
+    merge_similar_segments(lineSegmentsVertical, reallySmallGap, reallySmallGap)
 
     return lineSegmentsHorizontal, lineSegmentsVertical
 
@@ -196,10 +188,23 @@ def findRectangles(lineSegmentsHorizontal, lineSegmentsVertical, cornerGap):
 
     return rectangles
 
-def getRectangles(imgBW, isdebug):
+def getRectangles(args, imgBW, imgdef):
+    really_small_gap = 3
+    min_segment_length = 30
+    corner_gap = 12
+
+    if 'gap' in imgdef:
+        really_small_gap = int(imgdef['gap'])
+    if 'segment' in imgdef:
+        min_segment_length = int(imgdef['segment'])
+    if 'corner' in imgdef:
+        corner_gap = int(imgdef['corner'])
+    if args.debug:
+        print('identify rectangles with gap {0}, segment {1}, corner {2}'.format(really_small_gap, min_segment_length, corner_gap))
+
     # identify rectangles
-    lineSegmentsHorizontal, lineSegmentsVertical = findLineSegments(imgBW, REALLY_SMALL_GAP, MIN_SEGMENT_LENGTH)
-    if isdebug:
+    lineSegmentsHorizontal, lineSegmentsVertical = findLineSegments(imgBW, really_small_gap, min_segment_length)
+    if args.debug:
         # log segments
         print('HORIZONTAL segments')
         for y in sorted(lineSegmentsHorizontal.keys()):
@@ -213,7 +218,7 @@ def getRectangles(imgBW, isdebug):
             for y in lineSegmentsVertical[x]:
                 print(y)
 
-    rectangles = findRectangles(lineSegmentsHorizontal, lineSegmentsVertical, CORNER_GAP)
+    rectangles = findRectangles(lineSegmentsHorizontal, lineSegmentsVertical, corner_gap)
     # for i,r in enumerate(rectangles):
     #     print(i+1, r)
     return rectangles

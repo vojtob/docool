@@ -25,7 +25,7 @@ def imgrectangles(imgdef, args):
         cv2.imwrite(str(bwpath), imgBW)
     
     # identify rectangles
-    rectangles = rr.getRectangles(imgBW, args.debug)
+    rectangles = rr.getRectangles(args, imgBW, imgdef)
     if args.verbose:
         imgrec = image_utils.rectangles2image(img, rectangles)
         recpath = args.projectdir / 'temp' / 'img_rec' / imgdef['fileName']
