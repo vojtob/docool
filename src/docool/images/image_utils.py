@@ -18,6 +18,15 @@ def overlayImageOverImage(bigImg, smallImage, smallImageOrigin):
     y1 = smallImageOrigin[1]
     y2 = y1 + smallImage.shape[0]
 
+    if smallImage.shape[2] < 4:
+        # no transparency in image
+        x = np.full((smallImage.shape[0], smallImage.shape[1], 1), 255, smallImage.dtype)
+        # print('x shape', x.shape)
+        smallImage = np.concatenate((smallImage, x),2)
+        # img = np.hstack((img, x))
+        # print('add transparency shape', img.shape)
+        # print('mask shape', mask.shape)      
+
     alpha_smallImage = smallImage[:, :, 3] / 255.0
     alpha_bigImage = 1.0 - alpha_smallImage
 

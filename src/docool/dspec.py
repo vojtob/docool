@@ -99,7 +99,7 @@ def copy_and_add_elements_description(sourcepath, destpath, relativepath, args):
                         t = anchors.saveanchor(args, e, relativepath) + t
                         fout.write(t)
                     else:
-                        print('!!!!!!!!! PROBLEM: Element {0}:{1} not found'.format(etype,ename))
+                        print('!!!!!!!!! PROBLEM: Element {0}:{1} not found {2}'.format(etype,ename, sourcepath))
                     fout.write(line[m.end():])
                 else:
                     fout.write(line)
@@ -252,7 +252,7 @@ def list_unsolved_requirements(args):
 def doit(args):
     if args.site or args.all:
         build_site(args)
-    if args.build or args.all or args.update:
+    if args.content or args.all:
         if args.verbose:
             print('generate specification')
         # copy architecture description, insert element's description into text and generate anchors file
@@ -262,5 +262,7 @@ def doit(args):
         copy_content(args)
     if args.doc or args.all:
         publish_word_document(args)
+    # if args.web or args.all:
+    #     publish_word_document(args)
     if args.list:
         list_unsolved_requirements(args)
