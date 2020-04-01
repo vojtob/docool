@@ -39,8 +39,12 @@ def build_site(args):
         fout.write('\n')
         fout.write('[outputs]\n')
         fout.write('home = [ "HTML"]\n')
-        # fout.write('\n')
-        # fout.write('\n')
+        fout.write('\n')
+        fout.write('[markup]\n')
+        fout.write('  [markup.goldmark]\n')
+        fout.write('    [markup.goldmark.renderer]\n')
+        fout.write('      unsafe = true\n')
+        fout.write('\n\n')
     # shutil.copy(args.projectdir/'src'/'res'/'hugo-config'/'configNoTheme.toml', hugodir/'config.toml')
 
 def enhance_spec(args):
