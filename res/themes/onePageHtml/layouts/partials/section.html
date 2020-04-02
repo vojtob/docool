@@ -1,11 +1,6 @@
 {{partial "headerByURLdepth" . }}
 {{ .Content }}
 
-{{ range .Sections.ByWeight }}
-    {{ partial "section.html" . }}
-{{ end }}
-
 {{ range .Pages.ByWeight }}
-    {{partial "headerByURLdepth" . }}
-    {{ .Content }}
+    {{ partial "section.html" . }}
 {{ end }}

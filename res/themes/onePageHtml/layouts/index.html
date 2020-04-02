@@ -22,7 +22,7 @@
 <body>
     <div class="content">
         {{ .Content }}
-        {{ range .Sections.ByWeight }}
+        {{ range .Pages.ByWeight }}
             {{ partial "section.html" . }}
         {{ end }}
     </div>
