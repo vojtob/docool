@@ -128,12 +128,8 @@ class Requirement(Element):
         self.realizations = []
 
     def add_realization(self, realization_relationship, realization_element):
-        realization = Realization(realization_element, realization_relationship)
-        if Element.elementtype(realization_element) == 'archimate:Product':
-            self.realizations.insert(0, realization)
-        else:
-            self.realizations.append(realization)
-
+        self.realizations.append(Realization(realization_element, realization_relationship))
+    
 class Realization(Element):
     """special class for realization of requirements. It has two parts:
         1. realization element - it is core element that realize requirement
@@ -144,19 +140,11 @@ class Realization(Element):
         # create as element
         super().__init__(element)
         self.realization_relationship = Element(relation)
-    
-    def get_desc(self):
-        """get realization description. Try to use description from realization relationship
 
-        if it is not available, use realizing element description
-        if it is not available, return warning string 
-        """
-
-        if self.realization_relationship.desc is not None:
-            return self.realization_relationship.desc
-        if self.desc is not None:
-            return self.desc
-        return '<font color="orange">XXXXXX TODO: {0} BEZ POPISU</font>'.format(self.name)
-
-
-
+    def weight(self):
+        if self.type == 'archimate:Product':
+            return '000000' + self.name
+        if self.type == 'archimate:Capability':
+            return '000001' + self.name
+        return '999999' + self.name
+        

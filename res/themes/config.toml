@@ -1,0 +1,12 @@
+languageCode = "sk"
+DefaultContentLanguage = "sk"
+title = "SET NAME"
+canonifyURLs = true
+
+[outputs]
+home = [ "HTML"]
+
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = true

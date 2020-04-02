@@ -1,5 +1,6 @@
 
 src/docool/__pycache__
+src/docool/doc/__pycache__
 src/docool/model/__pycache__
 src/docool/images/__pycache__
 src/docool/model/specific/__pycache__
