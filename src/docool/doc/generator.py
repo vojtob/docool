@@ -131,14 +131,12 @@ def __process_req_folder(args, processor, sectionfolder, weight, parentpath, dep
         with open(indexpath, 'w', encoding='utf8') as fout:
             fout.write(__get_frontmatter(sectionfolder, weight))
             if len(reqs) < 1:
-                fout.write('{{% children  %}}\n')
+                # fout.write('{{% children  %}}\n')
+                fout.write('Adresár neobsahuje žiadne požiadavky\n')
             else:
                 # process requirements
                 for r in reqs:
                     __writereq(args, fout, r, depth)
-                    
-    else:
-        print('do not create folder')
 
     # process subfolders
     for w, subfolder in enumerate(sorted(processor.get_folders(sectionfolder))):
@@ -150,12 +148,12 @@ def generatereqs(args):
     reqpath = hugo.get_generated_path(args)
     __process_req_folder(args, processor, 'Requirements', None, reqpath, 2, False)
 
-def copy_content(args):
+def copy_images(args):
     dest_content = hugo.get_local_path(args)   
     # copy content
-    if args.verbose:
-        print('copy content into spec')
-    mycopy(hugo.get_generated_path(args), dest_content / 'content', args)
+    # if args.verbose:
+    #     print('copy content into spec')
+    # mycopy(hugo.get_generated_path(args), dest_content / 'content', args)
     # copy images
     if args.verbose:
         print('copy images')
