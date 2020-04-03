@@ -17,6 +17,7 @@ def __add_project(args):
         args.projectdir = Path(args.project)
     args.projectname = args.projectdir.stem
     args.docoolpath = Path(__file__).parent.parent
+    args.problems = []
 
     if args.verbose:
         print('{args.projectname}: {args.projectdir}'.format(args=args))
@@ -69,14 +70,6 @@ if __name__ == '__main__':
     parser_spec.add_argument('-l', '--list', help='list unsolved requirements', action='store_true')
     parser_spec.set_defaults(command='doc')
 
-    # parser_publish = subparsers.add_parser('publish', help='publish images, specification as word')
-    # parser_publish.add_argument('-v', '--verbose', help='to be more verbose', action='store_true')
-    # parser_publish.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
-    # parser_publish.add_argument('-i', '--images', help='publish images', action='store_true')
-    # parser_publish.add_argument('-d', '--doc', help='export to word document', action='store_true')
-    # parser_publish.add_argument('-w', '--web', help='export for web', action='store_true')
-    # parser_publish.set_defaults(command='publish')
-
     args = parser.parse_args()
     args = __add_project(args)
     if args.debug:
@@ -103,5 +96,11 @@ if __name__ == '__main__':
         log(args, 'done')
 
     print('\ndocool: DONE')
+    if args.problems:
+        print('Problems !!')
+        for p in args.problems:
+            print(p)
+    else:
+        print('no problems')
 
 

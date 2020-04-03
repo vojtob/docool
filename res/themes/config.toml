@@ -2,6 +2,8 @@ languageCode = "sk"
 DefaultContentLanguage = "sk"
 title = "SET NAME"
 canonifyURLs = true
+removePathAccents = true
+
 
 [outputs]
 home = [ "HTML"]

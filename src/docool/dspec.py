@@ -30,7 +30,7 @@ def publish_word_document(args):
         -b, --baseURL string         hostname (and path) to the root
     '''
     # cmd = 'hugo -D -s "{specpath}" -d "{onepagepath}" --themesDir C:\\Projects_src\\Work\\docool\\res\\themes\\ -t onePageHtml -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath)
-    cmd = 'hugo -D -s "{specpath}" -c ..\spec_generated -d "{onepagepath}" --themesDir {themespath} -t onePageHtml -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath, themespath=str(args.docoolpath/'res'/'themes'))
+    cmd = 'hugo -D -s "{specpath}" -c ..\\spec_generated -d "{onepagepath}" --themesDir {themespath} -t onePageHtml -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath, themespath=str(args.docoolpath/'res'/'themes'))
     # cmd = ' -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath)
     if args.debug:
         print(cmd)
@@ -68,9 +68,10 @@ def doit(args):
         if args.verbose:
             print('generate specification')
         # copy architecture description, insert element's description into text and generate anchors file
-        docgen.insert_model_elements(args)
+        mycopy(args.projectdir / 'src' / 'doc' / args.name, hugo.get_generated_path(args), args)
+        # docgen.insert_model_elements(args)
         # generate requirements, use anchors file to create links
-        docgen.generatereqs(args)
+        # docgen.generatereqs(args)
     if args.doc or args.all:
         publish_word_document(args)
     # if args.web or args.all:

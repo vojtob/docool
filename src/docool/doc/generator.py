@@ -51,6 +51,8 @@ def __copy_and_add_elements_description(sourcepath, destpath, relativepath, args
                         print('MATCH: type:{0}, name:"{1}", command:{2}'.format(etype, ename, command))
                     e = processor.find_element(etype,ename)
                     if e:
+                        fout.write('{{{{< archianchor {type} "{name}" >}}}} '.format(type=etype, name=ename))
+                        # fout.write(e.desc)
                         t = e.desc.replace("\r", " ")
                         if command=='TINSERT':
                             tls = t.split('\n')
@@ -64,6 +66,7 @@ def __copy_and_add_elements_description(sourcepath, destpath, relativepath, args
                         fout.write(t)
                     else:
                         print('!!!!!!!!! PROBLEM: Element {0}:{1} not found {2}'.format(etype,ename, sourcepath))
+                        args.problems.append('Element {0}:{1} not found {2}'.format(etype,ename, sourcepath))
                     fout.write(line[m.end():])
                 else:
                     fout.write(line)
