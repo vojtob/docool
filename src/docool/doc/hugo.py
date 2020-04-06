@@ -9,9 +9,6 @@ def getonepagepath(args):
     return args.projectdir / 'temp' / (args.name+'_onepage')
 
 def build_site(args):
-    if args.verbose:
-        print('build site')
-
     localpath = getlocalpath(args)
     # clean
     if args.verbose:

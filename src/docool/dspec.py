@@ -37,6 +37,8 @@ def list_unsolved_requirements(args):
 
 def doit(args):
     if args.site or args.all:
+        if args.verbose:
+            print('build site')
         hugo.build_site(args)
     if args.images or args.all or args.update:
         if args.verbose:
@@ -53,8 +55,8 @@ def doit(args):
         # copy architecture description, insert element's description into text and generate anchors file
         mycopy(args.projectdir / 'src' / 'doc' / args.name, hugo.getlocalpath(args) / 'content', args)
     if args.requirements or args.all or args.update:
-        # generate requirements, use anchors file to create links
-        # docgen.insert_model_elements(args)
+        if args.verbose:
+            print('generate requirements pages')
         docgen.generatereqs(args)
     if args.doc or args.all:
         if args.verbose:
