@@ -29,15 +29,19 @@ def saveanchor(args, element, pagepath):
     return '<a name="{0}"></a>'.format(aname)
 
 def getanchor(args, element):
-    """get anchor from file"""
-    aname = __anchorname(element)
-    anchorfile = args.projectdir / 'temp' / 'anchors.txt'
+    return '{{{{< archilink  {0} "{1}" >}}}}'.format(element.type, element.name)
 
-    with open(anchorfile, 'r', encoding='utf8') as fin:
-        for line in fin:
-            a = line.split(' -> ') 
-            if a[0] == aname:
-                # return a[1][:-1]+'#'+a[0]
-                return '{{{{< ref "{0}#{1}" >}}}}'.format(a[1][:-1], a[0])
 
-    return ''
+# def getanchor(args, element):
+#     """get anchor from file"""
+#     aname = __anchorname(element)
+#     anchorfile = args.projectdir / 'temp' / 'anchors.txt'
+
+#     with open(anchorfile, 'r', encoding='utf8') as fin:
+#         for line in fin:
+#             a = line.split(' -> ') 
+#             if a[0] == aname:
+#                 # return a[1][:-1]+'#'+a[0]
+#                 return '{{{{< ref "{0}#{1}" >}}}}'.format(a[1][:-1], a[0])
+
+#     return ''

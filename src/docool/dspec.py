@@ -11,37 +11,13 @@ import docool.model.anchors as anchors
 import docool.doc.hugo as hugo
 import docool.doc.generator as docgen
                       
-def publish_word_document(args):
+def generate_word_document(args):
     if args.verbose:
-        print('publish word document')
-    
-    # create hugo site with one single page
-    if args.debug:
-        print('create hugo site with one single page')
-    hugopath = args.projectdir / 'temp' / 'spec_local'
-    onepagepath = args.projectdir/'temp'/'spec_onepage'
-    shutil.rmtree(onepagepath, ignore_errors=True)
-    onepagepath.mkdir(parents=True, exist_ok=True)
-    ''' hugo parameters 
-        -D, --buildDrafts
-        -s, --source string
-        -d, --destination string
-        -t, --theme strings
-        -b, --baseURL string         hostname (and path) to the root
-    '''
-    # cmd = 'hugo -D -s "{specpath}" -d "{onepagepath}" --themesDir C:\\Projects_src\\Work\\docool\\res\\themes\\ -t onePageHtml -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath)
-    cmd = 'hugo -D -s "{specpath}" -c ..\\spec_generated -d "{onepagepath}" --themesDir {themespath} -t onePageHtml -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath, themespath=str(args.docoolpath/'res'/'themes'))
-    # cmd = ' -b "{onepagepath}"'.format(specpath=hugopath, onepagepath=onepagepath)
-    if args.debug:
-        print(cmd)
-    subprocess.run(cmd, shell=False)
-  
-    # generate word
-    if args.debug:
         print('generate word document')
-    onepagehtml = onepagepath / 'index.html'
-    wordpath = args.projectdir / 'release' / (args.projectname+'.docx')
+    onepagehtml = hugo.getonepagepath(args) / 'index.html'
     templatepath = args.docoolpath / 'res' / 'custom-reference.docx'
+
+    wordpath = args.projectdir / 'release' / (args.projectname+'.docx')
     wordpath.parent.mkdir(parents=True, exist_ok=True)
     cmd = 'pandoc {mainfile} -f html -t docx -o {outputname} --reference-doc={templatename} --verbose'.format(
         mainfile=str(onepagehtml), outputname=str(wordpath), templatename=str(templatepath))
@@ -63,18 +39,29 @@ def doit(args):
     if args.site or args.all:
         hugo.build_site(args)
     if args.images or args.all or args.update:
-        docgen.copy_images(args)
+        if args.verbose:
+            print('copy images')
+        dest_content = hugo.getlocalpath(args)
+        mycopy(args.projectdir / 'temp' / 'img_exported', dest_content / 'static' / 'img', args)
+        # overwrite them with images with icons
+        mycopy(args.projectdir / 'temp' / 'img_icons', dest_content / 'static' / 'img', args)
+        # copy areas images
+        mycopy(args.projectdir / 'temp' / 'img_areas', dest_content / 'static' / 'img', args)
     if args.content or args.all or args.update:
         if args.verbose:
-            print('generate specification')
+            print('copy content')
         # copy architecture description, insert element's description into text and generate anchors file
-        mycopy(args.projectdir / 'src' / 'doc' / args.name, hugo.get_generated_path(args), args)
-        # docgen.insert_model_elements(args)
+        mycopy(args.projectdir / 'src' / 'doc' / args.name, hugo.getlocalpath(args) / 'content', args)
+    if args.requirements or args.all or args.update:
         # generate requirements, use anchors file to create links
-        # docgen.generatereqs(args)
+        # docgen.insert_model_elements(args)
+        docgen.generatereqs(args)
     if args.doc or args.all:
-        publish_word_document(args)
+        if args.verbose:
+            print('publish word document')
+        hugo.export_onepage(args)
+        generate_word_document(args)
     # if args.web or args.all:
-    #     publish_word_document(args)
+    #     publish_web(args)
     if args.list:
         list_unsolved_requirements(args)

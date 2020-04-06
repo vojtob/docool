@@ -13,8 +13,7 @@ Send("cls{ENTER}");
 Sleep(200);
 Send("{F2}hugo{ENTER}");
 Sleep(200);
-;Send("hugo server -D -s ..\temp\spec_local\ -c ..\spec_generated --themesDir C:\Projects_src\Work\docool\res\themes\ -t hugo-theme-docdock");
-Send("hugo server -D -s ..\temp\spec_local\ -c ..\spec_generated --themesDir C:\Projects_src\Work\docool\res\themes\ -t hugo-theme-docdock");
+Send("hugo server -D -s ..\temp\spec_local\ --themesDir C:\Projects_src\Work\docool\res\themes\ -t hugo-theme-docdock");
 Sleep(200);
 
 ; setup utils tab

@@ -53,10 +53,6 @@ class ArchiFileProcessor:
         # get all requirements by type converted to Requirement class
         return [Element.elementname(f) for f in parentfolder.findall("folder", self.ns)]
 
-    @staticmethod
-    def isproduct(elementtype):
-        return elementtype == 'archimate:Product'
-  
 
 class Element:
     """ Element has a name and description """
@@ -85,7 +81,7 @@ class Element:
     @staticmethod
     def elementtype(element):
         keyname = '{' + ArchiFileProcessor.ns['xsi'] + '}type'
-        return element.attrib[keyname]
+        return element.attrib[keyname][len('archimate:'):]
         
     @staticmethod
     def elementdesc(element):
@@ -115,7 +111,8 @@ class Element:
             'Capability':'Schopnosť, prístup'
         }
         
-        return conversion[type.split(':')[1]]
+        # return conversion[type.split(':')[1]]
+        return conversion[type]
 
 
 class Requirement(Element):
@@ -142,9 +139,9 @@ class Realization(Element):
         self.realization_relationship = Element(relation)
 
     def weight(self):
-        if self.type == 'archimate:Product':
+        if self.type == 'Product':
             return '000000' + self.name
-        if self.type == 'archimate:Capability':
+        if self.type == 'Capability':
             return '000001' + self.name
         return '999999' + self.name
         

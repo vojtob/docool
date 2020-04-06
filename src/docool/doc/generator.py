@@ -17,7 +17,7 @@ def insert_model_elements(args):
 
     processor = mp.ArchiFileProcessor(args.projectdir)
     source_directory = args.projectdir / 'src' / 'doc' / args.name
-    destination_directory = hugo.get_generated_path(args)
+    destination_directory = hugo.getlocalpath(args) / 'content'
 
     # walk over files in from directory
     for (dirpath, dirnames, filenames) in os.walk(source_directory):
@@ -83,22 +83,23 @@ def __get_header(title, level):
 
 def __writerealization(args, fout, realization):
     # Realization by product type is used for general remarks, only realization relationship is displayed, no reference to element
-    if mp.ArchiFileProcessor.isproduct(realization.type):
+    if realization.type == 'Product':
         fout.write(realization.realization_relationship.desc+'\n\n')
         return
 
     # Capability means only simple description is displayed, no reference to element
-    if realization.type == 'archimate:Capability':
+    if realization.type == 'Capability':
         fout.write('**{capability_name}**: {realization_description}\n\n'.format(
             capability_name=realization.name, 
             realization_description=realization.desc))
         return
     
+    link = '{{{{< archilink  {0} "{1}" >}}}}'.format(realization.type, realization.name)
     fout.write('* **[{realization_name}]({link})** ({element_type})'.format(
         realization_name=realization.name,
         element_type=mp.Element.type2sk(realization.type),
-        link= anchors.getanchor(args, realization))
-    )
+        link=link) # link= anchors.getanchor(args, realization)
+    )    
     if realization.realization_relationship.desc is not None:
         # add specific description
         fout.write(': ' + realization.realization_relationship.desc)
@@ -113,7 +114,8 @@ def __writereq(args, fout, req, depth):
     fout.write(__get_header(req.name, depth))  
     # requirement realizations
     if len(req.realizations) == 0:
-        fout.write('<font color="red">XXXXXX TODO: Ziadna realizacia poziadavky</font>\n\n')
+        # fout.write('<font color="red">XXXXXX TODO: Ziadna realizacia poziadavky</font>\n\n')
+        fout.write('XXXXXX TODO: Ziadna realizacia poziadavky\n\n')
         return
     # sort realizations, product is the first, than capabilities, other last
     # for realization in req.realizations:      
@@ -147,22 +149,8 @@ def __process_req_folder(args, processor, sectionfolder, weight, parentpath, dep
     
 
 def generatereqs(args):
-    processor = mp.ArchiFileProcessor(args.projectdir)
-    reqpath = hugo.get_generated_path(args)
-    __process_req_folder(args, processor, 'Requirements', None, reqpath, 2, False)
-
-def copy_images(args):
-    dest_content = hugo.get_local_path(args)   
-    # copy content
-    # if args.verbose:
-    #     print('copy content into spec')
-    # mycopy(hugo.get_generated_path(args), dest_content / 'content', args)
-    # copy images
     if args.verbose:
-        print('copy images')
-    # copy exported images
-    mycopy(args.projectdir / 'temp' / 'img_exported', dest_content / 'static' / 'img', args)
-    # overwrite them with images with icons
-    mycopy(args.projectdir / 'temp' / 'img_icons', dest_content / 'static' / 'img', args)
-    # copy areas images
-    mycopy(args.projectdir / 'temp' / 'img_areas', dest_content / 'static' / 'img', args)
+        print('generate requirements pages')
+    processor = mp.ArchiFileProcessor(args.projectdir)
+    reqpath = hugo.getlocalpath(args) / 'content'
+    __process_req_folder(args, processor, 'Requirements', None, reqpath, 2, False)
