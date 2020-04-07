@@ -5,11 +5,10 @@ import unidecode
 
 import docool.model.model_processing as mp
 import docool.doc.hugo as hugo
-import docool.model.anchors as anchors
 from docool.utils import mycopy
 
 def generate_elements_map(args, processor):
-    """ copy architecture description, insert element's description into text and generate anchors file
+    """ generate map between archi elements and files where are elements mentioned
     """
 
     if args.debug:
@@ -77,7 +76,7 @@ def __writerealization(args, fout, realization, element2path):
     fout.write('* **[{realization_name}]({link})** ({element_type})'.format(
         realization_name=realization.name,
         element_type=mp.Element.type2sk(realization.type),
-        link=link) # link= anchors.getanchor(args, realization)
+        link=link)
     )    
     if realization.realization_relationship.desc is not None:
         # add specific description

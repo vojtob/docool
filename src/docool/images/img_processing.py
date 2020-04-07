@@ -39,22 +39,22 @@ def icons2image(imgdef, args):
     if args.verbose:
         print('add icons to image {0}'.format(imgdef['fileName']))
     if not (args.projectdir / 'temp' / 'img_exported' / imgdef['fileName']).exists():
-        print('    !!! file {0} does not exists !!!'.format(imgdef['fileName']))
+        args.problems.append('Add icons to image: file {0} does not exists !!!'.format(imgdef['fileName']))
         return
 
     img, rectangles = imgrectangles(imgdef, args)
     # add icons to image
     iconspath = args.projectdir / 'src' / 'res' / 'icons'
     for icondef in imgdef['icons']:
-        if args.verbose:
+        if args.debug:
             print('  add icon', icondef['iconName'])
         iconfilepath = iconspath / icondef['iconName']
         if not iconfilepath.exists():
-            print('    ERROR: could not find icon {0} for image {1}'.format(icondef['iconName'], imgdef['fileName']))
+            args.problems.append('Add icon2image: could not find icon {0} for image {1}'.format(icondef['iconName'], imgdef['fileName']))
             return
         recID = icondef['rec']
         if( recID > len(rectangles)):
-            print('    ERROR: icon {0} for image {1} refers to non existing rectangle {2}'.format(icondef['iconName'], imgdef['fileName'], recID))
+            args.problems.append('Add icon2image: icon {0} for image {1} refers to non existing rectangle {2}'.format(icondef['iconName'], imgdef['fileName'], recID))
             return
         img = image_utils.icon2image(img, 
             cv2.imread(str(iconfilepath), cv2.IMREAD_UNCHANGED),
@@ -65,7 +65,7 @@ def icons2image(imgdef, args):
     cv2.imwrite(str(imgiconpath), img)
 
 def areas2image(imgdef, args):
-    if args.verbose:
+    if args.debug:
         print('add area {0} into image {1}'.format(imgdef['focus-name'], imgdef['fileName']))
     
     _, rectangles = imgrectangles(imgdef, args)
@@ -76,7 +76,8 @@ def areas2image(imgdef, args):
     # identify bounding polygons for areas
     polygons = []
     if 'distance' in imgdef:
-        print('set distance')
+        if args.debug:
+            print('set distance')
         ra.set_area_gap(int(imgdef['distance']))
     for area in imgdef['areas']:
         area_rectangles = [rectangles[r-1] for r in area]            

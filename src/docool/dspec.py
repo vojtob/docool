@@ -7,7 +7,6 @@ import unidecode
 
 import docool.model.model_processing as mp
 from docool.utils import mycopy
-import docool.model.anchors as anchors
 import docool.doc.hugo as hugo
 import docool.doc.generator as docgen
                       
@@ -52,7 +51,6 @@ def doit(args):
     if args.content or args.all or args.update:
         if args.verbose:
             print('copy content')
-        # copy architecture description, insert element's description into text and generate anchors file
         mycopy(args.projectdir / 'src' / 'doc' / args.name, hugo.getlocalpath(args) / 'content', args)
     if args.requirements or args.all or args.update:
         if args.verbose:

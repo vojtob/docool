@@ -1,7 +1,6 @@
 import unittest
 from types import SimpleNamespace
 from pathlib import Path
-# import docool.model.anchors as anchors
 import requtils
 
 class TestRequirements(unittest.TestCase):
