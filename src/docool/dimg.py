@@ -140,16 +140,16 @@ def doit(args):
         if len(movefiles) < 1:
             if args.verbose:
                 print('no uxf files generated')
-            return
-        for (fromFile, toFile) in movefiles:
-            if args.debug:
-                print('move file {0} -> {1}'.format(fromFile, toFile))
-            while True:
-                try:
-                    os.replace(fromFile, toFile)
-                    break
-                except (PermissionError, FileNotFoundError):
-                    pass
+        else:
+            for (fromFile, toFile) in movefiles:
+                if args.debug:
+                    print('move file {0} -> {1}'.format(fromFile, toFile))
+                while True:
+                    try:
+                        os.replace(fromFile, toFile)
+                        break
+                    except (PermissionError, FileNotFoundError):
+                        pass
 
     if args.mermaid or args.all:
         # convert mm files to png files

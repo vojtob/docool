@@ -16,7 +16,7 @@ def generate_word_document(args):
     onepagehtml = hugo.getonepagepath(args) / 'index.html'
     templatepath = args.docoolpath / 'res' / 'custom-reference.docx'
 
-    wordpath = args.projectdir / 'release' / (args.projectname+'.docx')
+    wordpath = args.projectdir / 'release' / (args.projectname + '_' + args.name + '.docx')
     wordpath.parent.mkdir(parents=True, exist_ok=True)
     cmd = 'pandoc {mainfile} -f html -t docx -o {outputname} --reference-doc={templatename} --verbose'.format(
         mainfile=str(onepagehtml), outputname=str(wordpath), templatename=str(templatepath))
