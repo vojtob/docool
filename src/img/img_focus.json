@@ -1,2 +1,23 @@
 [
+    { "fileName": "01-Business/03-services-processes.png", "focus-name":"services", "areas": [
+        [1, 19, 30, 2, 20, 31]
+	]},
+    { "fileName": "01-Business/03-services-processes.png", "focus-name":"internal", "areas": [
+        [3, 12]
+	]},
+    { "fileName": "02-Application/02-app-detail.png", "focus-name":"01frontend", "areas": [
+        [1, 36, 37, 69]
+	]},
+    { "fileName": "02-Application/02-app-detail.png", "focus-name":"02CM", "areas": [
+        [32, 39, 56]
+	]},
+    { "fileName": "02-Application/02-app-detail.png", "focus-name":"03tools", "areas": [
+        [2, 3, 4]
+	]},
+    { "fileName": "02-Application/02-app-detail.png", "focus-name":"04common", "areas": [
+        [10, 11, 12]
+	]},
+    { "fileName": "02-Application/02-app-detail.png", "focus-name":"05suport", "areas": [
+        [71, 72, 73]
+	]}
 ]

@@ -1,2 +1,7 @@
 [
+    { "fileName": "Karantena1.png", "icons": [
+        { "rec":  2, "x": "left", "y":    "top", "size": 25, "iconName": "Server.png"},
+        { "rec":  3, "x": "left", "y":    "top", "size": 25, "iconName": "LaptopPhone.png"},
+        { "rec":  4, "x": "left", "y": "center", "size": 20, "iconName": "email.png"}
+    ]}
 ]
