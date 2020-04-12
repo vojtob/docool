@@ -56,7 +56,7 @@ def icons2image(imgdef, args):
         if( recID > len(rectangles)):
             args.problems.append('Add icon2image: icon {0} for image {1} refers to non existing rectangle {2}'.format(icondef['iconName'], imgdef['fileName'], recID))
             return
-        img = image_utils.icon2image(img, 
+        img = image_utils.icon2image(args, imgdef['fileName'], icondef['iconName'], img, 
             cv2.imread(str(iconfilepath), cv2.IMREAD_UNCHANGED),
             rectangles[recID-1], icondef['size'], icondef['x'], icondef['y'])
 

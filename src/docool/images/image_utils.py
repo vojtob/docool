@@ -35,7 +35,7 @@ def overlayImageOverImage(bigImg, smallImage, smallImageOrigin):
 
     return bigImg
 
-def icon2image(img, icon, rectangle, iconSize, xAlign, yAlign, marginSize=5):
+def icon2image(args, filename, iconname, img, icon, rectangle, iconSize, xAlign, yAlign, marginSize=5):
     s = max(icon.shape[0], icon.shape[1])
     dy = int((iconSize*icon.shape[0])/s)
     dx = int((iconSize*icon.shape[1])/s)
@@ -56,6 +56,7 @@ def icon2image(img, icon, rectangle, iconSize, xAlign, yAlign, marginSize=5):
         try:
             x = int( (1-xAlign)*rectangle[0][0] + xAlign*rectangle[1][0] - dx/2 )
         except:
+            args.problems.append('icon {0} in image {1} has bad x align !!!!!!!'.format(iconname, filename))
             print('       icon x align bad format !!!!!!!')
             return
     
@@ -72,6 +73,7 @@ def icon2image(img, icon, rectangle, iconSize, xAlign, yAlign, marginSize=5):
             pass
             y = int( (1-yAlign)*rectangle[0][1] + yAlign*rectangle[1][1] - dy/2 )
         except:
+            args.problems.append('icon {0} in image {1} has bad y align !!!!!!!'.format(iconname, filename))
             print('       icon y align bad format !!!!!!!!')
             return
 
