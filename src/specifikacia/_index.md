@@ -10,7 +10,7 @@ title: "Docool - documentation tools"
 ## Adresárová štruktúra
 
 ```
-src 
+src_doc 
   - img
     - images.json - definitions how to overlay images with icons
     - img_focus.json - definitions how to focus parts of image

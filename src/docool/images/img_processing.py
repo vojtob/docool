@@ -44,7 +44,7 @@ def icons2image(imgdef, args):
 
     img, rectangles = imgrectangles(imgdef, args)
     # add icons to image
-    iconspath = args.projectdir / 'src' / 'res' / 'icons'
+    iconspath = args.projectdir / 'src_doc' / 'res' / 'icons'
     for icondef in imgdef['icons']:
         if args.debug:
             print('  add icon', icondef['iconName'])

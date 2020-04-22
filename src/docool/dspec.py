@@ -51,7 +51,7 @@ def doit(args):
     if args.content or args.all or args.update:
         if args.verbose:
             print('copy content')
-        mycopy(args.projectdir / 'src' / 'doc' / args.name, hugo.getlocalpath(args) / 'content', args)
+        mycopy(args.projectdir / 'src_doc' / 'doc' / args.name, hugo.getlocalpath(args) / 'content', args)
     if args.requirements or args.all or args.update:
         if args.verbose:
             print('generate requirements pages')

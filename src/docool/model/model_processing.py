@@ -7,7 +7,7 @@ class ArchiFileProcessor:
     def __init__(self, projectdir):
         # modelname = projectdir.split('\\')[-1]
         # modelname = str(projectdir.stem)+'.archimate'
-        modelpath = projectdir / 'src' / 'model' / (str(projectdir.stem)+'.archimate')
+        modelpath = projectdir / 'src_doc' / 'model' / (str(projectdir.stem)+'.archimate')
         self.tree = ET.parse(modelpath)
     
     def get_element(self, eid):

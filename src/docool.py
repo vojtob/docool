@@ -14,7 +14,7 @@ def __add_project(args):
     if args.projectdir is None:
         args.projectdir = Path.cwd().parent
     else:
-        args.projectdir = Path(args.project)
+        args.projectdir = Path(args.projectdir)
     args.projectname = args.projectdir.stem
     args.docoolpath = Path(__file__).parent.parent
     args.problems = []
@@ -49,8 +49,8 @@ if __name__ == '__main__':
     parser_img.add_argument('-u', '--umlet', help='umlet -> png', action='store_true')
     parser_img.add_argument('-m', '--mermaid', help='mermaid images -> png', action='store_true')
     parser_img.add_argument('--png', help='copy png images from source to generated', action='store_true')
-    parser_img.add_argument('--icons', help='add icons to images based on src/docs/img/images.json', action='store_true')
-    parser_img.add_argument('--areas', help='create image with focused area based on src/docs/img/img_focus.json', action='store_true')
+    parser_img.add_argument('--icons', help='add icons to images based on src_doc/docs/img/images.json', action='store_true')
+    parser_img.add_argument('--areas', help='create image with focused area based on src_doc/docs/img/img_focus.json', action='store_true')
     parser_img.add_argument('-f', '--file', help='process only this one file')
     parser_img.add_argument('-p', '--publish', help='publish image files', action='store_true')
     parser_img.set_defaults(command='img')

@@ -73,11 +73,11 @@ def add_icons(args):
     if args.verbose:
         print('add icons')
     # read images icons definitions   
-    if not (args.projectdir / 'src' / 'img' / 'images.json').exists():
+    if not (args.projectdir / 'src_doc' / 'img' / 'images.json').exists():
         if args.verbose:
             print('no icons, skipp it')
         return
-    with open(args.projectdir / 'src' / 'img' / 'images.json') as imagesFile:
+    with open(args.projectdir / 'src_doc' / 'img' / 'images.json') as imagesFile:
         imagedefs = json.load(imagesFile)
     for imgdef in imagedefs:
         if args.file is not None and (imgdef['fileName'] != args.file):
@@ -89,11 +89,11 @@ def add_areas(args):
     if args.verbose:
         print('add areas')
     # read images icons definitions   
-    if not (args.projectdir / 'src' / 'img' / 'img_focus.json').exists():
+    if not (args.projectdir / 'src_doc' / 'img' / 'img_focus.json').exists():
         if args.verbose:
             print('no areas, skipp it')
         return
-    with open(args.projectdir / 'src' / 'img' / 'img_focus.json') as imagesFile:
+    with open(args.projectdir / 'src_doc' / 'img' / 'img_focus.json') as imagesFile:
         imagedefs = json.load(imagesFile)
     for imgdef in imagedefs:
         if args.file is not None and (imgdef['fileName'] != args.file):
@@ -133,7 +133,7 @@ def doit(args):
         # convert uxf files to png files
         movefiles = []
         __img_walk(args, 
-            args.projectdir / 'src' / 'img',
+            args.projectdir / 'src_doc' / 'img',
             args.projectdir / 'temp' / 'img_exported', 
             '.uxf', '.png', convert_uml)
         # move files
@@ -154,14 +154,14 @@ def doit(args):
     if args.mermaid or args.all:
         # convert mm files to png files
         __img_walk(args, 
-            args.projectdir / 'src' / 'img',
+            args.projectdir / 'src_doc' / 'img',
             args.projectdir / 'temp' / 'img_exported', 
             '.mmd', '.png', convert_mmd)
 
     if args.png or args.all:
         # copy png file
         __img_walk(args, 
-            args.projectdir / 'src' / 'img',
+            args.projectdir / 'src_doc' / 'img',
             args.projectdir / 'temp' / 'img_exported', 
             '.png', '.png', copy_png)
 

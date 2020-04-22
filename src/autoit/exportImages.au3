@@ -1,5 +1,5 @@
 #include <MsgBoxConstants.au3>
-Local $hWnd = WinWaitActive("Archi - " & $CmdLine[1] & "\src\model\");
+Local $hWnd = WinWaitActive("Archi - " & $CmdLine[1] & "\src_doc\model\");
 Sleep(200);
 ; set eng keyboard
 _SetKeyboardLayout("00000409", $hWnd)
