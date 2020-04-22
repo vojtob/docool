@@ -79,15 +79,47 @@ def turn_after_collision(rectangles, lastpoint, edge, edgename, edgedir):
     # create border_edge = prolong edge in direction and shift it slightly away from edge   
     border = get_collision_edge(edge, edgename, edgedir, lastpoint)
 
+    cpoints = []
+
     for r in rectangles:
         # potentional collision edge
         ce = get_edge(r, getopposite(edgedir))
         # check collision
         if (border[1]<ce[0]) and (ce[0]<border[2]) and (ce[1]<border[0]) and (border[0]<ce[2]):
             # collision          
-            return (get_collision_point(edge, edgename, edgedir, ce), ce, get_collision_trace(edgename, edgedir))
+            cpoints.append((get_collision_point(edge, edgename, edgedir, ce), ce, get_collision_trace(edgename, edgedir)))
+
+    if not cpoints:
+        return None
     
-    return None
+    if edgedir==LEFT:
+        # find the most right point
+        p = cpoints[0]
+        for c in cpoints:
+            if c[0] > p[0]:
+                p = c
+        return p
+    elif edgedir==RIGHT:
+        # find the most right point
+        p = cpoints[0]
+        for c in cpoints:
+            if c[0] < p[0]:
+                p = c
+        return p
+    elif edgedir==UP:
+        # find the most down point
+        p = cpoints[0]
+        for c in cpoints:
+            if c[1] > p[1]:
+                p = c
+        return p
+    else:
+        # find the most up point
+        p = cpoints[0]
+        for c in cpoints:
+            if c[1] < p[1]:
+                p = c
+        return p
 
 def continue_on(rectangles, edge, edgename, edgedir):
     """ check if there is a rectangle aligned with this one"""
