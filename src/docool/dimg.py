@@ -6,6 +6,8 @@ import time
 from pathlib import PureWindowsPath, Path
 import shutil
 
+import lxml.etree as ET
+
 from docool.images import img_processing
 from docool.utils import mycopy
 
@@ -173,3 +175,17 @@ def doit(args):
 
     if args.publish or args.all:
         publish_images(args)
+
+    if args.align:
+        # align elements in archimate file
+        modelname = args.projectname+'.archimate'
+        dom = ET.parse( str(args.projectdir / 'src_doc' / 'model' / modelname))
+        xslt = ET.parse(str(args.docoolpath / 'src' / 'xslt' / 'align2grid.xsl'))
+        transform = ET.XSLT(xslt)
+        newdom = transform(dom)
+        modelname2 = args.projectname+'2.archimate'
+        # with open(args.projectdir / 'src_doc' / 'model' / modelname2, 'w', encoding='utf-8') as fout:
+        with open(args.projectdir / 'src_doc' / 'model' / modelname2, 'w', encoding='UTF-8') as fout:
+            fout.write(ET.tostring(newdom, encoding='unicode', method='xml'))
+        #     fout.write(ET.tostring(newdom, encoding='unicode', pretty_print=True))
+        # # print(ET.tostring(newdom, pretty_print=True))

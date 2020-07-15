@@ -5,3 +5,17 @@ NBSP 
 ***** RE pre msvc
 \| \*\*[^*]*\*\* \| (\{\{<[^>]*>\}\}) <a name="[^"]*"></a>
 | $2$1 | 
+
+
+
+
+martin.civan5@gmail.com
+xpilnan@stuba.sk
+
+
+
+michal.janosik@transen.sk
+martin.parak@transen.sk
+robert.kopecky@transen.sk
+peter.kollar@transen.sk
+michal.snopko@transen.sk

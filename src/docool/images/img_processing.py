@@ -65,7 +65,7 @@ def icons2image(imgdef, args):
     cv2.imwrite(str(imgiconpath), img)
 
 def areas2image(imgdef, args):
-    if args.debug:
+    if args.verbose:
         print('add area {0} into image {1}'.format(imgdef['focus-name'], imgdef['fileName']))
     
     _, rectangles = imgrectangles(imgdef, args)
@@ -82,14 +82,20 @@ def areas2image(imgdef, args):
     for area in imgdef['areas']:
         area_rectangles = [rectangles[r-1] for r in area]            
         polygons.append(ra.find_traverse_points(area_rectangles))
-    
+
+    linecolor = (0,0,255)
+    if 'linecolor' in imgdef:
+        linecolor = (imgdef['linecolor'][2], imgdef['linecolor'][1], imgdef['linecolor'][0])
+    if args.verbose:
+        print('set linecolor to ', linecolor)
+
     # add transparency to image
     mask = np.full((img.shape[0], img.shape[1]), 80, np.uint8)
     for polygon in polygons:
         points = np.array([[p[0],p[1]] for p in polygon], np.int32)
         points = points.reshape((-1,1,2))
         # draw red polygon
-        img = cv2.polylines(img, [points], True, (0,0,255), 2)
+        img = cv2.polylines(img, [points], True, linecolor, 2)
         # use mask to set transparency
         mask = cv2.fillPoly(mask, [points], 255)
     # print('orig shape', img.shape)
