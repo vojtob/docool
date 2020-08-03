@@ -215,7 +215,13 @@ def find_traverse_points(area_rectangles):
     traverse = (None, get_edge(start_rect, UP), UP, RIGHT)
     while is_traverse(traverse[0], startpoint):
         if traverse[0] is not None:
-            points.append(traverse[0])
+            p0 = points[len(points)-1]
+            p = traverse[0]
+            if(abs(p[0]-p0[0]) < REALLY_SMALL_GAP):
+                p = (p0[0], p[1])
+            if(abs(p[1]-p0[1]) < REALLY_SMALL_GAP):
+                p = (p[0], p0[1])
+            points.append(p)
         traverse = go2nextpoint(area_rectangles, points[-1], traverse[1], traverse[2], traverse[3])
     
     return points
