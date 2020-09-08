@@ -23,6 +23,6 @@ Send("{TAB}" & $projectDir & "\utils{ENTER}");
 Sleep(1000);
 Send("{F2}" & $projectName & "{ENTER}");
 Sleep(2000);
-Send("%windir%\System32\cmd.exe ""/K"" C:\prg\anaconda3\Scripts\activate.bat C:\prg\anaconda3{ENTER}")
+Send("%windir%\System32\cmd.exe ""/K"" C:\Users\vbalint\Anaconda3\Scripts\activate.bat C:\Users\vbalint\Anaconda3{ENTER}")
 Sleep(2000);
 Send("docool -h{ENTER}");

@@ -51,6 +51,7 @@ if __name__ == '__main__':
     parser_img.add_argument('--png', help='copy png images from source to generated', action='store_true')
     parser_img.add_argument('--icons', help='add icons to images based on src_doc/docs/img/images.json', action='store_true')
     parser_img.add_argument('--areas', help='create image with focused area based on src_doc/docs/img/img_focus.json', action='store_true')
+    parser_img.add_argument('-c', '--createimg', help='create image from icons', action='store_true')
     parser_img.add_argument('--align', help='align elements in archimate file', action='store_true')
     parser_img.add_argument('-f', '--file', help='process only this one file')
     parser_img.add_argument('-p', '--publish', help='publish image files', action='store_true')

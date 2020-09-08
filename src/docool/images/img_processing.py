@@ -52,13 +52,29 @@ def icons2image(imgdef, args):
         if not iconfilepath.exists():
             args.problems.append('Add icon2image: could not find icon {0} for image {1}'.format(icondef['iconName'], imgdef['fileName']))
             return
-        recID = icondef['rec']
-        if( recID > len(rectangles)):
-            args.problems.append('Add icon2image: icon {0} for image {1} refers to non existing rectangle {2}'.format(icondef['iconName'], imgdef['fileName'], recID))
-            return
-        img = image_utils.icon2image(args, imgdef['fileName'], icondef['iconName'], img, 
-            cv2.imread(str(iconfilepath), cv2.IMREAD_UNCHANGED),
-            rectangles[recID-1], icondef['size'], icondef['x'], icondef['y'])
+        # resize icon
+        icon = cv2.imread(str(iconfilepath), cv2.IMREAD_UNCHANGED)
+        s = max(icon.shape[0], icon.shape[1])
+        dy = int((icondef['size']*icon.shape[0])/s)
+        dx = int((icondef['size']*icon.shape[1])/s)
+        icon = cv2.resize(icon, (dx,dy))
+
+        if 'rec' in icondef:
+            if args.debug:
+                print('add icon by rect')
+            recID = icondef['rec']
+            if( recID > len(rectangles)):
+                args.problems.append('Add icon2image: icon {0} for image {1} refers to non existing rectangle {2}'.format(icondef['iconName'], imgdef['fileName'], recID))
+                return
+            iconxy = image_utils.geticonxy(args, imgdef['fileName'], icondef['iconName'], 
+            icon, rectangles[recID-1], icondef['x'], icondef['y'])
+        else:
+            iconxy = (icondef['x'], icondef['y'])
+            if args.debug:
+                print('add icon by position', iconxy)
+
+        img = image_utils.overlayImageOverImage(img, icon, iconxy)
+
 
     imgiconpath = args.projectdir / 'temp' / 'img_icons' / imgdef['fileName']
     imgiconpath.parent.mkdir(parents=True, exist_ok=True)
@@ -83,19 +99,19 @@ def areas2image(imgdef, args):
         area_rectangles = [rectangles[r-1] for r in area]            
         polygons.append(ra.find_traverse_points(area_rectangles))
 
-    linecolor = (0,0,255)
-    if 'linecolor' in imgdef:
-        linecolor = (imgdef['linecolor'][2], imgdef['linecolor'][1], imgdef['linecolor'][0])
-    if args.verbose:
-        print('set linecolor to ', linecolor)
+    linecolor = (imgdef['linecolor'][2], imgdef['linecolor'][1], imgdef['linecolor'][0]) if 'linecolor' in imgdef else (0,0,255)
+    linewidth = imgdef['linewidth'] if ('linewidth' in imgdef) else 2
+    opacity = imgdef['opacity'] if 'opacity' in imgdef else 80
+    if args.debug:
+        print('linecolor: {0}, linewidth: {1}, opacity: {2}'.format(linecolor, linewidth, opacity))
 
     # add transparency to image
-    mask = np.full((img.shape[0], img.shape[1]), 80, np.uint8)
+    mask = np.full((img.shape[0], img.shape[1]), opacity, np.uint8)
     for polygon in polygons:
         points = np.array([[p[0],p[1]] for p in polygon], np.int32)
         points = points.reshape((-1,1,2))
         # draw red polygon
-        img = cv2.polylines(img, [points], True, linecolor, 2)
+        img = cv2.polylines(img, [points], True, linecolor, linewidth)
         # use mask to set transparency
         mask = cv2.fillPoly(mask, [points], 255)
     # print('orig shape', img.shape)

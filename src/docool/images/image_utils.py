@@ -2,9 +2,14 @@ import os
 import numpy as np
 import cv2
 
+BW_TRESHOLD = 135
+
 def convertImage(img):
-    gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
-    thresh = cv2.threshold(gray, 135, 255, cv2.THRESH_BINARY_INV)[1]
+    if len(img.shape) > 2:
+        gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
+    else:
+        gray = img
+    thresh = cv2.threshold(gray, BW_TRESHOLD, 255, cv2.THRESH_BINARY_INV)[1]
     # edges = cv2.Canny(gray,100,200)
     # blur = cv2.blur(edges,(4,4))
     # cv2.imshow(cv2.namedWindow("addIcons"), gray)
@@ -30,19 +35,18 @@ def overlayImageOverImage(bigImg, smallImage, smallImageOrigin):
     alpha_smallImage = smallImage[:, :, 3] / 255.0
     alpha_bigImage = 1.0 - alpha_smallImage
 
-    for c in range(0, 3):
-        bigImg[y1:y2, x1:x2, c] = (alpha_smallImage * smallImage[:, :, c] + alpha_bigImage * bigImg[y1:y2, x1:x2, c])
+    # print('bigimg shape', bigImg.shape, smallImage.shape, alpha_bigImage.shape, alpha_smallImage.shape)
+    if len(bigImg.shape) > 2:
+        for c in range(0, 3):
+            bigImg[y1:y2, x1:x2, c] = (alpha_smallImage * smallImage[:, :, c] + alpha_bigImage * bigImg[y1:y2, x1:x2, c])
+    else:
+        bigImg[y1:y2, x1:x2] = (alpha_smallImage[:,:] * smallImage[:, :,0] + alpha_bigImage * bigImg[y1:y2, x1:x2])
 
     return bigImg
 
-def icon2image(args, filename, iconname, img, icon, rectangle, iconSize, xAlign, yAlign, marginSize=5):
-    s = max(icon.shape[0], icon.shape[1])
-    dy = int((iconSize*icon.shape[0])/s)
-    dx = int((iconSize*icon.shape[1])/s)
-    # print('rezise from {0[0]}x{0[1]} to {1}x{2}'.format(icon.shape, dy, dx))
-    # print('icon orig size {0[0]}x{0[1]}'.format(icon.shape))
-    icon = cv2.resize(icon, (dx,dy))
-    # print('icon dest size {0[0]}x{0[1]}'.format(icon.shape))
+def geticonxy(args, filename, iconname, icon, rectangle, xAlign, yAlign, marginSize=5):
+    dx = icon.shape[1]
+    dy = icon.shape[0]
 
     # calculate x position of icon
     if(xAlign == 'left'):
@@ -58,7 +62,7 @@ def icon2image(args, filename, iconname, img, icon, rectangle, iconSize, xAlign,
         except:
             args.problems.append('icon {0} in image {1} has bad x align !!!!!!!'.format(iconname, filename))
             print('       icon x align bad format !!!!!!!')
-            return
+            return None
     
     # calculate y position of icon
     if(yAlign == 'top'):
@@ -75,9 +79,9 @@ def icon2image(args, filename, iconname, img, icon, rectangle, iconSize, xAlign,
         except:
             args.problems.append('icon {0} in image {1} has bad y align !!!!!!!'.format(iconname, filename))
             print('       icon y align bad format !!!!!!!!')
-            return
+            return None
 
-    return overlayImageOverImage(img, icon, (x,y))
+    return (x,y)
     
 def rectangles2image(img, rectangles):
     imgRec = np.copy(img)

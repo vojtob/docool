@@ -42,7 +42,8 @@ def export_archi(args):
     subprocess.run(cmd, shell=False)
 
 def convert_svg(args, fromfile, tofile, orig_extension, new_extension):
-    svg_command = str(Path(os.environ['IM_HOME'], 'magick')) + ' -density 144 {srcfile} {destfile}'
+    # svg_command = str(Path(os.environ['IM_HOME'], 'magick')) + ' -density 144 {srcfile} {destfile}'
+    svg_command = 'magick -density 144 {srcfile} {destfile}'
     cmd = svg_command.format(srcfile=fromfile, destfile=tofile)
     if args.debug:
         print(cmd)
@@ -153,15 +154,22 @@ def doit(args):
                     except (PermissionError, FileNotFoundError):
                         pass
 
-    if args.mermaid or args.all:
-        # convert mm files to png files
-        __img_walk(args, 
-            args.projectdir / 'src_doc' / 'img',
-            args.projectdir / 'temp' / 'img_exported', 
-            '.mmd', '.png', convert_mmd)
+    # if args.mermaid or args.all:
+    #     # convert mm files to png files
+    #     __img_walk(args, 
+    #         args.projectdir / 'src_doc' / 'img',
+    #         args.projectdir / 'temp' / 'img_exported', 
+    #         '.mmd', '.png', convert_mmd)
 
     if args.png or args.all:
         # copy png file
+        __img_walk(args, 
+            args.projectdir / 'src_doc' / 'img',
+            args.projectdir / 'temp' / 'img_exported', 
+            '.png', '.png', copy_png)
+
+    if args.createimg or args.all:
+        # create custom images
         __img_walk(args, 
             args.projectdir / 'src_doc' / 'img',
             args.projectdir / 'temp' / 'img_exported', 
