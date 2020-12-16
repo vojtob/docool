@@ -45,7 +45,7 @@ def removeShortSegments(lineSegments, minSegmentLength):
         lineSegments.pop(keyCoordinate)
 
 def merge_similar_segments(line_segments, similar_length, really_small_gap):
-    """if two there are two almoust similar segments, remove shorter"""
+    """if there are two almoust similar segments, remove shorter"""
 
     emptyList = []
     for y in sorted(line_segments.keys()):
