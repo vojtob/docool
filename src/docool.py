@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 import shutil
 
-from docool import dimg, dspec
+from docool import dimg, dspec, dres
 
 def log(args, message='start'):
     message_format = '{args.projectname}: {message} {args.command}'
@@ -71,6 +71,13 @@ if __name__ == '__main__':
     parser_spec.add_argument('-l', '--list', help='list unsolved requirements', action='store_true')
     parser_spec.set_defaults(command='doc')
 
+    parser_img = subparsers.add_parser('res', help='generate resources - icons')
+    # parser_img.add_argument('-v', '--verbose', help='to be more verbose', action='store_true')
+    # parser_img.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
+    parser_img.add_argument('-t', '--test', help='test one icon in temp file', action='store_true')
+    parser_img.set_defaults(command='res')
+
+
     args = parser.parse_args()
     args = __add_project(args)
     if args.debug:
@@ -94,6 +101,11 @@ if __name__ == '__main__':
     if args.command=='doc':
         log(args)
         dspec.doit(args)
+        log(args, 'done')
+
+    if args.command=='res':
+        log(args)
+        dres.doit(args)
         log(args, 'done')
 
     print('\ndocool: DONE')
