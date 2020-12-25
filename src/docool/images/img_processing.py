@@ -44,14 +44,17 @@ def icons2image(imgdef, args):
 
     img, rectangles = imgrectangles(imgdef, args)
     # add icons to image
-    iconspath = args.projectdir / 'src_doc' / 'res' / 'icons'
+    iconspath = args.projectdir / 'temp' / 'generated_icons'
+    iconspath2 = Path('C:/Projects_src/resources/dxc-icons')
     for icondef in imgdef['icons']:
         if args.debug:
             print('  add icon', icondef['iconName'])
         iconfilepath = iconspath / icondef['iconName']
         if not iconfilepath.exists():
-            args.problems.append('Add icon2image: could not find icon {0} for image {1}'.format(icondef['iconName'], imgdef['fileName']))
-            return
+            iconfilepath = iconspath2 / icondef['iconName']
+            if not iconfilepath.exists():
+                args.problems.append('Add icon2image: could not find icon {0} for image {1}'.format(icondef['iconName'], imgdef['fileName']))
+                return
         # resize icon
         icon = cv2.imread(str(iconfilepath), cv2.IMREAD_UNCHANGED)
         s = max(icon.shape[0], icon.shape[1])
