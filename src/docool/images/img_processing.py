@@ -44,8 +44,9 @@ def icons2image(imgdef, args):
 
     img, rectangles = imgrectangles(imgdef, args)
     # add icons to image
-    iconspath = args.projectdir / 'temp' / 'generated_icons'
-    iconspath2 = Path('C:/Projects_src/resources/dxc-icons')
+    # iconspath = args.projectdir / 'temp' / 'generated_icons'
+    iconspath = Path('C:/Projects_src/resources/dxc-icons')
+    iconspath2 = Path('C:/Projects_src/resources/dxc-icons/generated')
     for icondef in imgdef['icons']:
         if args.debug:
             print('  add icon', icondef['iconName'])
@@ -92,11 +93,14 @@ def areas2image(imgdef, args):
     if args.debug:
         print('whole image path:', imgpath)
     img = cv2.imread(str(imgpath), cv2.IMREAD_UNCHANGED)
+    if(img == None):
+        img = cv2.imread(str(args.projectdir / 'temp' / 'img_exported' / imgdef['fileName']), cv2.IMREAD_UNCHANGED)
+
     # identify bounding polygons for areas
     polygons = []
     if 'distance' in imgdef:
         if args.debug:
-            print('set distance')
+            print('set distance', int(imgdef['distance']))
         ra.set_area_gap(int(imgdef['distance']))
     for area in imgdef['areas']:
         area_rectangles = [rectangles[r-1] for r in area]            
