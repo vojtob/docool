@@ -37,6 +37,8 @@ def export_archi(args):
         autoit_path= PureWindowsPath('C:/Program Files (x86)/AutoIt3/AutoIt3_x64.exe'), 
         script_path=args.docoolpath / 'src' / 'autoit' / 'exportImages.au3', 
         project_path=args.projectdir)
+    if args.file is not None:
+        cmd = cmd + ' ' + args.file
     if args.debug:
         print(cmd)
     subprocess.run(cmd, shell=False)
@@ -83,7 +85,7 @@ def add_icons(args):
     with open(args.projectdir / 'src_doc' / 'img' / 'images.json') as imagesFile:
         imagedefs = json.load(imagesFile)
     for imgdef in imagedefs:
-        if args.file is not None and (imgdef['fileName'] != args.file):
+        if (args.file is not None) and (not PureWindowsPath(imgdef['fileName']).with_suffix('').match(args.file)):
             # we want to process a specific file, but not this
             continue
         img_processing.icons2image(imgdef, args)
@@ -99,7 +101,7 @@ def add_areas(args):
     with open(args.projectdir / 'src_doc' / 'img' / 'img_focus.json') as imagesFile:
         imagedefs = json.load(imagesFile)
     for imgdef in imagedefs:
-        if args.file is not None and (imgdef['fileName'] != args.file):
+        if (args.file is not None) and (not PureWindowsPath(imgdef['fileName']).with_suffix('').match(args.file)):
             # we want to process a specific file, but not this
             continue
         img_processing.areas2image(imgdef, args)

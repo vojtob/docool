@@ -8,6 +8,11 @@ Local $imageScale = 100;
 Local $project_dir_png = $CmdLine[1] & "\temp\img_exported";
 Local $project_dir_svg = $CmdLine[1] & "\temp\img_exported_svg";
 Local $project_dir = $project_dir_svg;
+If ($CmdLine[0] >= 2) Then
+	Local $onlyItem = '\' & StringReplace($CmdLine[2], "/", "\")
+EndIf;
+
+
 Sleep(200);
 
 ; export ALL
@@ -70,6 +75,12 @@ Func exportLayer($layerID, $layerName)
 EndFunc
 
 Func exportImage($itemID, $itemName)
+	If IsDeclared("onlyItem") Then
+		If $onlyItem <> $itemName Then
+			Return;
+		EndIf;
+	EndIf;
+
 	;MsgBox($MB_SYSTEMMODAL, "Title", "itemID : " & $itemID, 10)
 	;MsgBox($MB_SYSTEMMODAL, "Title", "itemName : " & $sText, 10)
 	; select item
