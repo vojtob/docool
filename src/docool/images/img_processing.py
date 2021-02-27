@@ -93,7 +93,7 @@ def areas2image(imgdef, args):
     if args.debug:
         print('whole image path:', imgpath)
     img = cv2.imread(str(imgpath), cv2.IMREAD_UNCHANGED)
-    if(img == None):
+    if(img.any == None):
         img = cv2.imread(str(args.projectdir / 'temp' / 'img_exported' / imgdef['fileName']), cv2.IMREAD_UNCHANGED)
 
     # identify bounding polygons for areas
