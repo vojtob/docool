@@ -1,5 +1,6 @@
 import os
 import shutil
+import subprocess
 from pathlib import Path
 
 def mycopy(source_directory, destination_directory, args, ingore_dot_folders=True, onfile=None):
@@ -34,3 +35,18 @@ def mycopy(source_directory, destination_directory, args, ingore_dot_folders=Tru
                 onfile(sourcefile, Path(destfile), relativepath, args)
             else:
                 shutil.copy(str(sourcefile), destfile)
+
+def generate_word_document(args):
+    if args.verbose:
+        print('generate word document')
+    onepagehtml = args.onepagepath / 'index.html'
+    templatepath = args.docoolpath / 'res' / 'custom-reference.docx'
+
+    wordpath = args.projectdir / 'temp' / (args.projectname + '_' + args.name + '.docx')
+    wordpath.parent.mkdir(parents=True, exist_ok=True)
+    cmd = 'pandoc {mainfile} -f html -t docx -o {outputname} --reference-doc={templatename} --verbose'.format(
+        mainfile=str(onepagehtml), outputname=str(wordpath), templatename=str(templatepath))
+    if args.debug:
+        print(cmd)
+    subprocess.run(cmd, shell=False)
+

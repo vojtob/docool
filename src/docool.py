@@ -19,7 +19,7 @@ def __add_project(args):
         args.projectdir = Path(args.projectdir)
 
     args.localpath = args.projectdir / 'temp' / (args.name+'_local')
-    args.onepagepath = args.projectdir / 'temp' / (args.name+'_local')
+    args.onepagepath = args.projectdir / 'temp' / (args.name+'_1_local')
     args.imgsourcedir = args.projectdir / 'temp' / 'img_all'
     args.docsourcedir = args.projectdir / 'src_doc'
     args.projectname = args.projectdir.stem
@@ -52,6 +52,9 @@ if __name__ == '__main__':
     parser_content = subparsers.add_parser('content', help='copy content and images')
     parser_content.set_defaults(command='content')
 
+    parser_word = subparsers.add_parser('word', help='create word from documentation')
+    parser_word.set_defaults(command='word')
+
     # parser_spec = subparsers.add_parser('doc', help='create documentation')
     # parser_spec.add_argument('-u', '--update', help='update specification with new content and images', action='store_true')
     # parser_spec.add_argument('-g', '--generate', help='generate specification and requirements', action='store_true')
@@ -64,6 +67,7 @@ if __name__ == '__main__':
     args = __add_project(args)
     if args.debug:
         args.verbose = True
+        print(args)
 
     if not hasattr(args, 'command'):
         print('NO COMMAND')
@@ -90,6 +94,13 @@ if __name__ == '__main__':
         utils.mycopy(args.imgsourcedir, args. localpath / 'static' / 'img', args)
         utils.mycopy(args.docsourcedir / args.name, args. localpath / 'content', args)
         log(args, 'done copy content')
+
+    if (args.command=='word'):
+        log(args, 'start generating word')
+        hugo.export_onepage(args)
+        # args.problems.append('generating word not implemented')
+        utils.generate_word_document(args)
+        log(args, 'done generating word')
 
 
     if args.problems:
