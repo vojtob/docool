@@ -7,3 +7,4 @@ src/docool/model/specific/__pycache__
 src/docool/temp.py
 release
 temp
+.vscode/settings.json
