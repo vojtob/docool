@@ -2,7 +2,7 @@ import argparse
 from pathlib import Path
 import shutil
 
-from docool import hugo, utils 
+from docool import hugo, utils
 
 # from docool import dimg, dspec, dres
 

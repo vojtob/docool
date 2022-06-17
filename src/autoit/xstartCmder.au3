@@ -17,10 +17,10 @@ Send("hugo server -D -s ..\temp\arch_local\ --themesDir C:\Projects_src\Personal
 Sleep(200);
 
 ; setup utils tab
-Send("^t");
-Sleep(500);
-Send("{TAB}" & $projectDir & "\utils{ENTER}");
-Sleep(1000);
-Send("{F2}" & $projectName & "{ENTER}");
-Sleep(2000);
-Send("%windir%\System32\cmd.exe ""/K"" C:\Users\vbalint\Anaconda3\Scripts\activate.bat C:\Users\vbalint\Anaconda3{ENTER}")
+;Send("^t");
+;Sleep(500);
+;Send("{TAB}" & $projectDir & "\utils{ENTER}");
+;Sleep(1000);
+;Send("{F2}" & $projectName & "{ENTER}");
+;Sleep(2000);
+;Send("%windir%\System32\cmd.exe ""/K"" C:\Users\vbalint\Anaconda3\Scripts\activate.bat C:\Users\vbalint\Anaconda3{ENTER}")
