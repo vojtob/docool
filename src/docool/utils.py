@@ -48,5 +48,4 @@ def generate_word_document(args):
         mainfile=str(onepagehtml), outputname=str(wordpath), templatename=str(templatepath))
     if args.debug:
         print(cmd)
-    subprocess.run(cmd, shell=False)
-
+    subprocess.run(cmd, shell=False) 
