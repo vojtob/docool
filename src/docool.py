@@ -37,7 +37,7 @@ if __name__ == '__main__':
     print('docool: START\n')
 
     parser = argparse.ArgumentParser(prog='docool', description='Documentation tools')
-    parser.add_argument('-pd', '--projectdir', help='set project explicitly')
+    # parser.add_argument('-pd', '--projectdir', help='set project explicitly')
     parser.add_argument('-v', '--verbose', help='to be more verbose', action='store_true')
     parser.add_argument('-d', '--debug', help='add debug info, very low level', action='store_true')
     parser.add_argument('name', help='name of documentation')
