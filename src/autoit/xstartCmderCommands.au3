@@ -12,5 +12,6 @@ Send("cls{ENTER}");
 Sleep(200);
 Send("{F2}ify{ENTER}");
 Sleep(200);
-;Send("%windir%\System32\cmd.exe ""/K"" C:\Users\vbalint\Anaconda3\Scripts\activate.bat ify{ENTER}");
+; activate python environment
+Send("..\env\Scripts\activate.bat{ENTER}")
 Sleep(200);
