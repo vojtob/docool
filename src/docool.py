@@ -13,7 +13,7 @@ def log(args, message):
     print(message_format.format(args=args, message=message))
 
 def __add_project(args):
-    if args.projectdir is None:
+    if not 'projectdir' in args:
         args.projectdir = Path.cwd().parent
     else:
         args.projectdir = Path(args.projectdir)
@@ -64,14 +64,14 @@ if __name__ == '__main__':
     # parser_spec.add_argument('-l', '--list', help='list unsolved requirements', action='store_true')
 
     args = parser.parse_args()
+    print('args: ', args)
     args = __add_project(args)
     if args.debug:
         args.verbose = True
         print(args)
 
     if not hasattr(args, 'command'):
-        print('NO COMMAND')
-    #     args.command = 'all'
+        args.command = 'all'
     log(args, 'starts with the command ' + args.command)
 
     if args.command=='clean':
