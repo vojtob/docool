@@ -5,6 +5,7 @@ python -m venv env
 2. Nainštalovať chýbajúce packages
 pip3 install opencv-python
 pip3 install numpy
+pip install lxml
 
 3. Vytvoriť github
 	a. zmazať súbory čo nechcem, napr. temp adresár
